@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ── Design tokens ─────────────────────────────────────────────────── */
+:root {
+  /* Light mode (default) */
+  --canvas:            #f8f8f8;
+  --surface:           #ffffff;
+  --surface-elevated:  #f2f2f2;
+  --surface-card:      #ebebeb;
+  --hairline:          #e2e2e2;
+  --hairline-soft:     rgba(0,0,0,0.06);
+  --hairline-strong:   rgba(0,0,0,0.12);
+  --text-primary:      #0a0a0a;
+  --text-body:         #3a3a3a;
+  --text-mute:         #737373;
+  --text-ash:          #9a9a9a;
+  --cta-bg:            #0a0a0a;
+  --cta-fg:            #ffffff;
+  --cta-bg-hover:      #1f1f1f;
+  --accent-red:        #d42b2b;
+  --accent-red-soft:   rgba(212,43,43,0.10);
+  --accent-green:      #1a9e6f;
+  --accent-green-soft: rgba(26,158,111,0.10);
+  --accent-blue:       #0070f0;
+  --accent-blue-soft:  rgba(0,112,240,0.10);
+  --accent-yellow:     #c48a00;
+  --accent-yellow-soft:rgba(196,138,0,0.10);
+  --hero-stripe-start: #ff5757;
+  --hero-stripe-end:   #a1131a;
+
+  color-scheme: light;
+}
+
+.dark {
+  /* Dark mode — Raycast-inspired */
+  --canvas:            #07080a;
+  --surface:           #0d0d0d;
+  --surface-elevated:  #101111;
+  --surface-card:      #121212;
+  --hairline:          #242728;
+  --hairline-soft:     rgba(255,255,255,0.06);
+  --hairline-strong:   rgba(255,255,255,0.14);
+  --text-primary:      #f4f4f6;
+  --text-body:         #cdcdcd;
+  --text-mute:         #9c9c9d;
+  --text-ash:          #6a6b6c;
+  --cta-bg:            #ffffff;
+  --cta-fg:            #000000;
+  --cta-bg-hover:      #e8e8e8;
+  --accent-red:        #ff6161;
+  --accent-red-soft:   rgba(255,97,97,0.15);
+  --accent-green:      #59d499;
+  --accent-green-soft: rgba(89,212,153,0.15);
+  --accent-blue:       #57c1ff;
+  --accent-blue-soft:  rgba(87,193,255,0.15);
+  --accent-yellow:     #ffc533;
+  --accent-yellow-soft:rgba(255,197,51,0.15);
+
+  color-scheme: dark;
+}
+
+/* ── Base styles ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background-color: var(--canvas);
+  color: var(--text-body);
+  font-family: 'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+  font-feature-settings: "calt", "kern", "liga", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--hairline-strong); border-radius: 3px; }
+
+/* ── Selection ─────────────────────────────────────────────────────── */
+::selection { background: var(--accent-blue-soft); color: var(--text-primary); }
+
+/* ── Focus ring ────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+
+/* ── Utility: hero stripe ──────────────────────────────────────────── */
+.hero-stripe {
+  background:
+    linear-gradient(125deg, var(--hero-stripe-start) 0%, transparent 28%),
+    linear-gradient(125deg, transparent 12%, var(--hero-stripe-start) 16%, transparent 44%),
+    linear-gradient(125deg, transparent 28%, var(--hero-stripe-end) 32%, transparent 58%);
+  opacity: 0.10;
+}
+.dark .hero-stripe { opacity: 0.14; }
