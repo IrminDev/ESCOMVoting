@@ -37,7 +37,7 @@ const focusHandlers = {
 const ROLES = [
   { value: 'STUDENT',   label: 'Estudiantes' },
   { value: 'PROFESSOR', label: 'Profesores' },
-  { value: 'ADMIN',     label: 'Administrativos' },
+  { value: 'PAAE',      label: 'PAAE' },
 ]
 
 export function NewElectionPage() {
@@ -48,7 +48,7 @@ export function NewElectionPage() {
   const [description, setDescription] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [allowedRoles, setAllowedRoles] = useState<string[]>(['STUDENT', 'PROFESSOR', 'ADMIN'])
+  const [allowedRoles, setAllowedRoles] = useState<string[]>(['STUDENT', 'PROFESSOR', 'PAAE'])
   const [candidates, setCandidates] = useState<CandidateInput[]>([
     { name: '', description: '' },
     { name: '', description: '' },

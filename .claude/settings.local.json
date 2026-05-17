@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm run *)",
       "Bash(npx tsc *)",
-      "Bash(./gradlew compileJava -q)"
+      "Bash(./gradlew compileJava -q)",
+      "Bash(grep -E \"^\\(shield-check|lock|vote|eye|fingerprint|sparkles|arrow-right|arrow-up-right|check-circle-2|key-round|bar-chart-3|users|chevron-right|calendar|award\\)\\\\.js$\")"
     ]
   }
 }

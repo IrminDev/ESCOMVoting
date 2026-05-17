@@ -3,6 +3,6 @@ export interface UserDTO {
   institutionalId: string
   email: string
   name: string
-  role: 'STUDENT' | 'PROFESSOR' | 'ADMIN'
+  role: 'STUDENT' | 'PROFESSOR' | 'PAAE'
   active: boolean
 }

@@ -110,7 +110,7 @@ export function ImportUsersPage() {
           ))}
         </div>
         <p className="text-xs" style={{ color: 'var(--text-ash)' }}>
-          Roles válidos: <code className="font-mono">STUDENT</code>, <code className="font-mono">PROFESSOR</code>, <code className="font-mono">ADMIN</code>
+          Roles válidos: <code className="font-mono">STUDENT</code>, <code className="font-mono">PROFESSOR</code>, <code className="font-mono">PAAE</code>
         </p>
       </motion.div>
 

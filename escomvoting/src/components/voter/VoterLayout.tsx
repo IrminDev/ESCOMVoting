@@ -7,7 +7,7 @@ import { cn } from '../../lib/utils'
 const ROLE_LABEL: Record<string, string> = {
   STUDENT:   'Estudiante',
   PROFESSOR: 'Profesor',
-  ADMIN:     'Administrador',
+  PAAE:      'PAAE',
 }
 
 export function VoterLayout() {
@@ -21,7 +21,7 @@ export function VoterLayout() {
   }
 
   const roleLabel = ROLE_LABEL[session?.role ?? ''] ?? session?.role ?? ''
-  const isAdmin = session?.role === 'ADMIN'
+  const isAdmin = session?.role === 'PAAE'
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--canvas)' }}>

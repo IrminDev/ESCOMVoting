@@ -81,7 +81,7 @@ public class Election {
         return switch (role) {
             case STUDENT   -> publicKeyStudent;
             case PROFESSOR -> publicKeyProfessor;
-            case ADMIN     -> publicKeyAdmin;
+            case PAAE      -> publicKeyAdmin;
         };
     }
 
@@ -89,7 +89,7 @@ public class Election {
         return switch (role) {
             case STUDENT   -> privateKeyEncStudent;
             case PROFESSOR -> privateKeyEncProfessor;
-            case ADMIN     -> privateKeyEncAdmin;
+            case PAAE      -> privateKeyEncAdmin;
         };
     }
 
@@ -97,7 +97,7 @@ public class Election {
         switch (role) {
             case STUDENT   -> { publicKeyStudent = pubHex;   privateKeyEncStudent = privEnc; }
             case PROFESSOR -> { publicKeyProfessor = pubHex; privateKeyEncProfessor = privEnc; }
-            case ADMIN     -> { publicKeyAdmin = pubHex;     privateKeyEncAdmin = privEnc; }
+            case PAAE      -> { publicKeyAdmin = pubHex;     privateKeyEncAdmin = privEnc; }
         }
     }
 

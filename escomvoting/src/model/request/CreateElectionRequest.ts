@@ -8,6 +8,6 @@ export interface CreateElectionRequest {
   description: string
   startDate: string   // ISO-8601 instant, e.g. "2025-06-01T09:00:00Z"
   endDate: string
-  allowedRoles: string[]  // "STUDENT" | "PROFESSOR" | "ADMIN"
+  allowedRoles: string[]  // "STUDENT" | "PROFESSOR" | "PAAE"
   candidates: CandidateInput[]
 }

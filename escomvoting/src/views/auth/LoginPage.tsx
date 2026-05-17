@@ -89,7 +89,7 @@ export function LoginPage() {
       const session = JSON.parse(sessionStorage.getItem('ev-session') ?? '{}') as {
         role?: string
       }
-      navigate(session.role === 'ADMIN' ? '/admin' : '/elections', { replace: true })
+      navigate(session.role === 'PAAE' ? '/admin' : '/elections', { replace: true })
     } catch (err) {
       if (err instanceof ApiError) {
         setError(

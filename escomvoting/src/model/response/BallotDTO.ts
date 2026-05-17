@@ -2,7 +2,7 @@ export interface BallotDTO {
   id: string
   candidateId: string
   candidateName: string
-  voterGroup: string        // STUDENT | PROFESSOR | ADMIN
+  voterGroup: string        // STUDENT | PROFESSOR | PAAE
   nullifier: string         // hex64
   rPrime: string            // uncompressed EC point hex (130 chars)
   sPrime: string            // hex64

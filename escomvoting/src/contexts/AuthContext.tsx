@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       session,
       isAuthenticated: session !== null,
-      isAdmin: session?.role === 'ADMIN',
+      isAdmin: session?.role === 'PAAE',
       login,
       logout,
     }),

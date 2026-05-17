@@ -1,6 +1,7 @@
 package com.github.escom.escomvoting.config;
 
 import com.github.escom.escomvoting.model.entity.User;
+import com.github.escom.escomvoting.model.entity.UserRole;
 import com.github.escom.escomvoting.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,10 +47,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UUID userId = UUID.fromString(claims.getSubject());
                 User user = userRepository.findById(userId).orElse(null);
                 if (user != null && user.isActive()) {
-                    var auth = new UsernamePasswordAuthenticationToken(
-                            user, null,
-                            List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
-                    );
+                    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+                    if (user.getRole() == UserRole.PAAE) {
+                        authorities.add(new SimpleGrantedAuthority("SCOPE_ADMIN"));
+                    }
+                    var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (JwtException ignored) {

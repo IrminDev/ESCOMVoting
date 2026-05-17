@@ -92,7 +92,7 @@ export function AppRouter() {
         <Route
           path="/admin"
           element={
-            <RequireAuth role="ADMIN">
+            <RequireAuth role="PAAE">
               <AdminLayout />
             </RequireAuth>
           }

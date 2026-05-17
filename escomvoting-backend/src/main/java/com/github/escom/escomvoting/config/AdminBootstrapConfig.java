@@ -28,7 +28,7 @@ public class AdminBootstrapConfig {
             admin.setInstitutionalId(adminInstitutionalId);
             admin.setEmail(adminEmail);
             admin.setName(adminName);
-            admin.setRole(UserRole.ADMIN);
+            admin.setRole(UserRole.PAAE);
             admin.setPasswordHash(passwordEncoder.encode(adminPassword));
             admin.setActive(true);
             userRepository.save(admin);

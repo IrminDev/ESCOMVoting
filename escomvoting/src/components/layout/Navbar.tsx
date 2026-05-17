@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Shield, Sun, Moon, Menu, X } from 'lucide-react'
+import { Shield, Sun, Moon, Menu, X, ArrowRight } from 'lucide-react'
 import { useTheme } from '../../contexts/ThemeContext'
 import { cn } from '../../lib/utils'
+
+const NAVY = '#050C9C'
+const BLUE = '#3572EF'
+const HAIRLINE_CYAN = 'rgba(58,190,249,0.27)'
+const BODY = '#3a4a6b'
+const MUTE = '#6b7a99'
+const WHITE = '#ffffff'
 
 const navLinks = [
   { label: 'Características', href: '#features' },
@@ -34,30 +41,30 @@ export function Navbar() {
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        height: '56px',
-        borderBottom: '1px solid var(--hairline)',
+        height: '64px',
+        borderBottom: `1px solid ${HAIRLINE_CYAN}`,
         background: scrolled
-          ? 'color-mix(in srgb, var(--canvas) 80%, transparent)'
-          : 'var(--canvas)',
+          ? 'rgba(255,255,255,0.85)'
+          : WHITE,
         backdropFilter: scrolled ? 'blur(12px)' : undefined,
         transition: 'background 0.2s ease, backdrop-filter 0.2s ease',
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between gap-4">
         {/* Logo */}
         <a
           href="/"
           className="flex items-center gap-2 shrink-0"
           style={{ textDecoration: 'none' }}
         >
-          <Shield
-            size={20}
-            style={{ color: 'var(--accent-red)' }}
-            strokeWidth={2}
-          />
+          <Shield size={22} style={{ color: NAVY }} strokeWidth={2} />
           <span
             className="text-sm font-semibold tracking-tight"
-            style={{ color: 'var(--text-primary)' }}
+            style={{
+              color: NAVY,
+              letterSpacing: '-0.02em',
+              fontSize: '0.95rem',
+            }}
           >
             ESCOMVoting
           </span>
@@ -72,12 +79,12 @@ export function Navbar() {
               className={cn(
                 'text-sm font-medium px-3 py-1.5 rounded-md transition-colors duration-150',
               )}
-              style={{ color: 'var(--text-mute)', textDecoration: 'none' }}
+              style={{ color: MUTE, textDecoration: 'none' }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-primary)'
+                ;(e.currentTarget as HTMLAnchorElement).style.color = NAVY
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-mute)'
+                ;(e.currentTarget as HTMLAnchorElement).style.color = MUTE
               }}
             >
               {link.label}
@@ -90,12 +97,12 @@ export function Navbar() {
               className={cn(
                 'text-sm font-medium px-3 py-1.5 rounded-md transition-colors duration-150',
               )}
-              style={{ color: 'var(--text-mute)', textDecoration: 'none' }}
+              style={{ color: MUTE, textDecoration: 'none' }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-primary)'
+                ;(e.currentTarget as HTMLAnchorElement).style.color = NAVY
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-mute)'
+                ;(e.currentTarget as HTMLAnchorElement).style.color = MUTE
               }}
             >
               {link.label}
@@ -110,13 +117,18 @@ export function Navbar() {
             onClick={toggle}
             aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
             className="p-2 rounded-md transition-colors duration-150"
-            style={{ color: 'var(--text-mute)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+            style={{
+              color: MUTE,
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+            }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-primary)'
-              ;(e.currentTarget as HTMLButtonElement).style.background = 'var(--surface-elevated)'
+              ;(e.currentTarget as HTMLButtonElement).style.color = NAVY
+              ;(e.currentTarget as HTMLButtonElement).style.background = 'rgba(58,190,249,0.10)'
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-mute)'
+              ;(e.currentTarget as HTMLButtonElement).style.color = MUTE
               ;(e.currentTarget as HTMLButtonElement).style.background = 'transparent'
             }}
           >
@@ -126,30 +138,42 @@ export function Navbar() {
           {/* CTA — desktop only */}
           <Link
             to="/login"
-            className="hidden md:inline-flex items-center text-sm font-medium px-4 py-1.5 rounded-lg transition-colors duration-150"
+            className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium px-5 py-2 transition-all duration-150 group"
             style={{
-              background: 'var(--cta-bg)',
-              color: 'var(--cta-fg)',
+              background: NAVY,
+              color: WHITE,
+              borderRadius: '9999px',
               textDecoration: 'none',
+              boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = 'var(--cta-bg-hover)'
+              ;(e.currentTarget as HTMLAnchorElement).style.background = BLUE
+              ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 6px 18px rgba(53,114,239,0.28)'
+              ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)'
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = 'var(--cta-bg)'
+              ;(e.currentTarget as HTMLAnchorElement).style.background = NAVY
+              ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 12px rgba(5,12,156,0.18)'
+              ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)'
             }}
           >
             Iniciar sesión
+            <ArrowRight size={15} strokeWidth={2.25} className="transition-transform duration-150 group-hover:translate-x-0.5" />
           </Link>
 
           {/* Hamburger — mobile only */}
           <button
             className="md:hidden p-2 rounded-md transition-colors duration-150"
-            style={{ color: 'var(--text-mute)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+            style={{
+              color: NAVY,
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+            }}
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
-            {menuOpen ? <X size={18} strokeWidth={2} /> : <Menu size={18} strokeWidth={2} />}
+            {menuOpen ? <X size={20} strokeWidth={2} /> : <Menu size={20} strokeWidth={2} />}
           </button>
         </div>
       </div>
@@ -165,13 +189,13 @@ export function Navbar() {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             style={{
               position: 'absolute',
-              top: '56px',
+              top: '64px',
               left: 0,
               right: 0,
-              background: 'var(--canvas)',
-              borderBottom: '1px solid var(--hairline)',
+              background: WHITE,
+              borderBottom: `1px solid ${HAIRLINE_CYAN}`,
               zIndex: 49,
-              padding: '8px 16px 16px',
+              padding: '12px 24px 20px',
             }}
           >
             {navLinks.map((link) => (
@@ -179,7 +203,7 @@ export function Navbar() {
                 key={link.label}
                 href={link.href}
                 className="block text-sm font-medium py-2.5 px-2"
-                style={{ color: 'var(--text-body)', textDecoration: 'none' }}
+                style={{ color: BODY, textDecoration: 'none' }}
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}
@@ -190,7 +214,7 @@ export function Navbar() {
                 key={link.label}
                 to={link.to}
                 className="block text-sm font-medium py-2.5 px-2"
-                style={{ color: 'var(--text-body)', textDecoration: 'none' }}
+                style={{ color: BODY, textDecoration: 'none' }}
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}
@@ -198,15 +222,18 @@ export function Navbar() {
             ))}
             <Link
               to="/login"
-              className="mt-2 block text-center text-sm font-medium px-4 py-2 rounded-lg"
+              className="mt-3 inline-flex items-center justify-center gap-1.5 w-full text-sm font-medium px-5 py-2.5"
               style={{
-                background: 'var(--cta-bg)',
-                color: 'var(--cta-fg)',
+                background: NAVY,
+                color: WHITE,
+                borderRadius: '9999px',
                 textDecoration: 'none',
+                boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
               }}
               onClick={() => setMenuOpen(false)}
             >
               Iniciar sesión
+              <ArrowRight size={15} strokeWidth={2.25} />
             </Link>
           </motion.div>
         )}

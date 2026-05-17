@@ -18,7 +18,7 @@ public record ElectionDTO(
         Instant endDate,
         String status,
         List<String> allowedRoles,
-        // Per-role public keys — keyed by "STUDENT", "PROFESSOR", "ADMIN"
+        // Per-role public keys — keyed by "STUDENT", "PROFESSOR", "PAAE"
         // Exposed so the client can pick the correct key for its own role when blinding
         Map<String, String> publicKeys,
         List<CandidateDTO> candidates

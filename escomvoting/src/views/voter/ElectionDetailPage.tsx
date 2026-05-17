@@ -49,7 +49,7 @@ function formatDate(iso: string) {
 const ROLE_LABEL: Record<string, string> = {
   STUDENT:   'Estudiantes',
   PROFESSOR: 'Profesores',
-  ADMIN:     'Administradores',
+  PAAE:      'PAAE',
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────

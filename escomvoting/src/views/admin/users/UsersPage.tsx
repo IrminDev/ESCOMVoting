@@ -12,7 +12,7 @@ import type { PageResponse } from '../../../model/response/PageResponse'
 const ROLE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   STUDENT:   { label: 'Estudiante',    color: 'var(--accent-blue)',   bg: 'var(--accent-blue-soft)' },
   PROFESSOR: { label: 'Profesor',      color: 'var(--accent-green)',  bg: 'var(--accent-green-soft)' },
-  ADMIN:     { label: 'Administrador', color: 'var(--accent-yellow)', bg: 'var(--accent-yellow-soft)' },
+  PAAE:      { label: 'PAAE',          color: 'var(--accent-yellow)', bg: 'var(--accent-yellow-soft)' },
 }
 
 function RoleBadge({ role }: { role: string }) {

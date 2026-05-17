@@ -31,13 +31,13 @@ type VerifyStatus = 'idle' | 'running' | 'valid' | 'invalid' | 'error'
 const ROLE_LABEL: Record<string, string> = {
   STUDENT:   'Estudiante',
   PROFESSOR: 'Profesor',
-  ADMIN:     'Administrador',
+  PAAE:      'PAAE',
 }
 
 const ROLE_COLOR: Record<string, { color: string; bg: string }> = {
   STUDENT:   { color: 'var(--accent-blue)',   bg: 'var(--accent-blue-soft)' },
   PROFESSOR: { color: 'var(--accent-green)',  bg: 'var(--accent-green-soft)' },
-  ADMIN:     { color: 'var(--accent-yellow)', bg: 'var(--accent-yellow-soft)' },
+  PAAE:      { color: 'var(--accent-yellow)', bg: 'var(--accent-yellow-soft)' },
 }
 
 function formatDateTime(iso: string) {

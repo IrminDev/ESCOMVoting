@@ -1,669 +1,579 @@
 ---
-version: alpha
-name: Raycast
-属于: A dark-canvas developer-tools system that treats the marketing page like an extended product screenshot — pure-near-black background, command-palette mockups as the hero, Inter typography with the ss03 stylistic set turned on, and a single white CTA pill that doesn't break the inky atmosphere. The chrome reads like Raycast's own command-palette UI scaled up to a marketing page: monochrome dark surfaces with a faint surface ladder (#07080a → #0d0d0d → #101111), tight 6–10px radius on cards, hairline 1px borders in #242728, and rare splashes of saturated accent (Hacker News yellow, Slack red, Mac green, info blue) reserved for product-tile category illustrations. The signature visual moment is a red gradient hero wordmark — three diagonal red stripes laid across the very top of the home page like a launch-banner — paired with full-bleed product UI screenshots that show Raycast's actual command palette, store, and AI chat surfaces.
+version: 2.0
+name: ESCOM Voting — Oceanic
 description: |
-  Raycast's marketing system reads like an extended product screenshot. The chrome IS the in-product chrome at marketing scale: pure-near-black canvas, hairline 1px borders, command-palette-style cards, Inter typography with the ss03 stylistic set enabled site-wide, white CTA pill, and a small set of saturated category accent colors (yellow / red / green / blue) reserved for extension and feature illustrations. Section rhythm is generous (~96px) but the page never breaks tonal continuity — the whole site sits in one continuous dark mode.
+  A bright, trust-forward marketing identity for the ESCOM Voting platform. The home page is built as a vertical journey from a deep-navy cinematic hero (radial gradient orbs, dotted grid mask, parallax scroll) into clean white feature surfaces, an ocean-cyan process band, a saturated navy stats wall, an archive section of closed elections, and a navy→cyan gradient final CTA card. The system is anchored by a four-stop oceanic palette — navy `#050C9C`, electric blue `#3572EF`, sky cyan `#3ABEF9`, ice `#A7E6FF` — used as both UI chrome and as gradient material for every "moment" surface. Iconography is Lucide; motion is Framer Motion (parallax, orb drift, viewport-staggered entries). No emojis appear in the chrome.
 
 colors:
-  primary: "#ffffff"
-  primary-pressed: "#e8e8e8"
-  on-primary: "#000000"
-  ink: "#f4f4f6"
-  body: "#cdcdcd"
-  charcoal: "#d3d3d4"
-  mute: "#9c9c9d"
-  ash: "#6a6b6c"
-  stone: "#434345"
-  on-dark: "#ffffff"
-  on-dark-mute: "rgba(255,255,255,0.72)"
-  canvas: "#07080a"
-  surface: "#0d0d0d"
-  surface-elevated: "#101111"
-  surface-card: "#121212"
-  button-fg: "#18191a"
-  hairline: "#242728"
-  hairline-soft: "rgba(255,255,255,0.08)"
-  hairline-strong: "rgba(255,255,255,0.16)"
-  accent-blue: "#57c1ff"
-  accent-blue-soft: "rgba(87,193,255,0.15)"
-  accent-red: "#ff6161"
-  accent-red-soft: "rgba(255,97,97,0.15)"
-  accent-green: "#59d499"
-  accent-green-soft: "rgba(89,212,153,0.15)"
-  accent-yellow: "#ffc533"
-  accent-yellow-soft: "rgba(255,197,51,0.15)"
-  hero-stripe-start: "#ff5757"
-  hero-stripe-end: "#a1131a"
-  key-bg-start: "#121212"
-  key-bg-end: "#0d0d0d"
+  navy:          "#050C9C"   # deepest brand color · hero base · CTA card base · stats wall · primary text on white
+  navy-deep:     "#040A7A"   # gradient hand-off shade between navy and the page surface
+  blue:          "#3572EF"   # primary action · headings accent · link color · gradient mid-stop
+  cyan:          "#3ABEF9"   # secondary accent · status dots · stat unit color · gradient hand-off
+  ice:           "#A7E6FF"   # tertiary accent · hero body text on navy · ambient glow · soft card tint
+  white:         "#ffffff"   # primary surface for content sections · CTA pill background
+  ink:           "#050C9C"   # body headings on white surfaces (navy doubles as ink)
+  body:          "#3a4a6b"   # default paragraph color on white surfaces (cool slate)
+  mute:          "#6b7a99"   # metadata and tertiary copy on white surfaces
+  error-bg:      "#fee"      # inline error banner background
+  error-fg:      "#c00"      # inline error banner text
+  navy-soft:     "rgba(5,12,156,0.10)"
+  cyan-soft:     "rgba(58,190,249,0.20)"
+  ice-soft:      "rgba(167,230,255,0.33)"
+  hairline-cyan: "rgba(58,190,249,0.27)"   # card borders on white surfaces
+  hairline-ice:  "rgba(167,230,255,0.33)"  # ambient borders on tinted surfaces
+  glow-ice:      "rgba(167,230,255,0.55)"  # orb / CTA glow base
+  overlay-white: "rgba(255,255,255,0.08)"  # translucent CTA on navy
+  overlay-ice:   "rgba(167,230,255,0.07)"  # hero badge backdrop
+
+gradients:
+  hero:          "linear-gradient(135deg, #050C9C 0%, #0a1ab3 45%, #3572EF 100%)"
+  cta-card:      "linear-gradient(135deg, #050C9C 0%, #3572EF 60%, #3ABEF9 100%)"
+  step-bubble:   "linear-gradient(135deg, #050C9C 0%, #3572EF 100%)"
+  text-cyan:     "linear-gradient(120deg, #3ABEF9 0%, #A7E6FF 100%)"   # used on the highlighted hero word
+  process-bg:    "linear-gradient(180deg, rgba(167,230,255,0.33) 0%, #ffffff 100%)"
+  feature-card:  "linear-gradient(135deg, rgba(167,230,255,0.13) 0%, rgba(58,190,249,0.07) 100%)"
+  step-line:     "linear-gradient(90deg, #050C9C, #3572EF, #3ABEF9, #A7E6FF)"
+  orb-cyan:      "radial-gradient(circle, rgba(58,190,249,0.4) 0%, transparent 70%)"
+  orb-blue:      "radial-gradient(circle, rgba(53,114,239,0.4) 0%, transparent 70%)"
+  orb-ice:       "radial-gradient(circle, rgba(167,230,255,0.33) 0%, transparent 70%)"
 
 typography:
   display-xl:
-    fontFamily: Inter
-    fontSize: 64px
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   clamp(2.5rem, 6vw, 5.5rem)
+    fontWeight: 600
+    lineHeight: 1.02
+    letterSpacing: -0.04em
+    use: hero headline
+  display-lg:
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   clamp(2rem, 4.5vw, 3.5rem)
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: -0.03em
+    use: section headline, final CTA headline
+  display-md:
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   clamp(2rem, 4vw, 3.25rem)
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: -0.03em
+    use: features and process section headings
+  display-sm:
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   clamp(1.75rem, 3vw, 2.75rem)
     fontWeight: 600
     lineHeight: 1.1
-    letterSpacing: 0
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  display-lg:
-    fontFamily: Inter
-    fontSize: 56px
-    fontWeight: 500
-    lineHeight: 1.17
-    letterSpacing: 0.2px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  heading-xl:
-    fontFamily: Inter
-    fontSize: 24px
-    fontWeight: 500
-    lineHeight: 1.6
-    letterSpacing: 0.2px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
+    letterSpacing: -0.03em
+    use: tertiary section headings (closed elections)
+  stat-xl:
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   clamp(2.5rem, 5vw, 4rem)
+    fontWeight: 600
+    lineHeight: 1
+    letterSpacing: -0.04em
+    fontVariantNumeric: tabular-nums
+    use: stats band big numbers
   heading-lg:
-    fontFamily: Inter
-    fontSize: 22px
-    fontWeight: 500
-    lineHeight: 1.15
-    letterSpacing: 0
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  heading-md:
-    fontFamily: Inter
-    fontSize: 20px
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: 0.2px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  heading-sm:
-    fontFamily: Inter
-    fontSize: 18px
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: 0.2px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   1.25rem
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: -0.02em
+    use: feature card titles, election card titles
   body-lg:
-    fontFamily: Inter
-    fontSize: 18px
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   1.15rem
     fontWeight: 400
     lineHeight: 1.6
-    letterSpacing: 0
-    fontFeature: '"calt", "kern", "liga", "ss03"'
+    use: hero sub-paragraph (on navy)
   body-md:
-    fontFamily: Inter
-    fontSize: 16px
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   1rem
     fontWeight: 400
-    lineHeight: 1.6
-    letterSpacing: 0
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  body-strong:
-    fontFamily: Inter
-    fontSize: 16px
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: 0.2px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
+    lineHeight: 1.65
+    use: default paragraph on white
   body-sm:
-    fontFamily: Inter
-    fontSize: 14px
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   0.875rem
     fontWeight: 400
-    lineHeight: 1.6
-    letterSpacing: 0
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  body-sm-strong:
-    fontFamily: Inter
-    fontSize: 14px
-    fontWeight: 500
-    lineHeight: 1.6
-    letterSpacing: 0.2px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  caption-md:
-    fontFamily: Inter
-    fontSize: 13px
-    fontWeight: 400
-    lineHeight: 1.4
-    letterSpacing: 0.1px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  caption-sm:
-    fontFamily: Inter
-    fontSize: 12px
-    fontWeight: 400
-    lineHeight: 1.5
-    letterSpacing: 0.4px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  link-md:
-    fontFamily: Inter
-    fontSize: 16px
+    lineHeight: 1.55
+    use: step description, secondary copy
+  caption:
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   0.75rem
     fontWeight: 500
     lineHeight: 1.4
-    letterSpacing: 0.3px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
-  button-md:
-    fontFamily: Inter
-    fontSize: 14px
-    fontWeight: 500
-    lineHeight: 1.6
-    letterSpacing: 0.2px
-    fontFeature: '"calt", "kern", "liga", "ss03"'
+    letterSpacing: 0.05em
+    use: card metadata, status pill text
+  eyebrow:
+    fontFamily: Inter, system-ui, sans-serif
+    fontSize:   0.75rem
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: 0.18em
+    textTransform: uppercase
+    use: section eyebrow over each headline
+  step-tag:
+    fontFamily: ui-monospace, "JetBrains Mono", monospace
+    fontSize:   0.75rem
+    fontWeight: 600
+    letterSpacing: 0.1em
+    use: "PASO 01..04" labels under each step bubble
 
 rounded:
-  none: 0px
-  xs: 4px
-  sm: 6px
-  md: 8px
-  lg: 10px
-  xl: 16px
-  full: 9999px
+  none:   0px
+  sm:     6px       # pills, status dots
+  md:     12px      # small inline buttons (none currently used)
+  lg:     16px      # feature card icon tile (12px radius via rounded-xl)
+  xl:     20px      # election card, feature card (rounded-2xl)
+  hero:   32px      # the giant final CTA card (rounded-[2rem])
+  pill:   9999px    # all CTAs, status chips, eyebrow badge
 
 spacing:
-  xxs: 2px
-  xs: 4px
-  sm: 8px
-  md: 12px
-  lg: 16px
-  xl: 24px
-  xxl: 32px
-  section: 96px
+  xxs:   2px
+  xs:    4px
+  sm:    8px
+  md:    12px
+  lg:    16px
+  xl:    24px
+  xxl:   32px
+  section-sm: 64px
+  section:    96px     # default vertical rhythm between sections
+  section-lg: 128px    # used as py-32 (8rem) for white feature/process/closed/cta sections
+
+motion:
+  hero-parallax:     "useScroll → useTransform(scrollY, [0,400], [0,80]) on y; opacity [1 → 0.4] over [0,300]"
+  hero-stagger:      "0.5s → 0.7s entry, delays 0 / 0.1 / 0.25 / 0.4 / 0.55"
+  orb-drift:         "infinite x/y oscillation 18–25s easeInOut"
+  card-enter:        "opacity 0→1, y 30→0 over 0.5s with stagger delay i * 0.08"
+  step-enter:        "opacity 0→1, y 24→0 over 0.5s with stagger delay i * 0.12"
+  card-hover:        "translate-y -1, shadow grows; group-hover scales icon tile 1.10x"
+  link-arrow:        "icon translateX +4px on group-hover"
+  gap-grow:          "Link gap 1.5→2.5 px on hover for archive 'Ver todas' link"
 
 components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.on-primary}"
-    typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 36px
-  button-primary-pressed:
-    backgroundColor: "{colors.primary-pressed}"
-    textColor: "{colors.on-primary}"
-    typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-  button-secondary:
-    backgroundColor: "transparent"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 36px
-  button-tertiary:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 36px
-  button-disabled:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.ash}"
-    rounded: "{rounded.md}"
-  install-button:
-    backgroundColor: "transparent"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 6px 14px
-  text-input:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 12px
-    height: 36px
-  text-input-focused:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    rounded: "{rounded.md}"
-  store-search-bar:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
-    padding: 10px 16px
-    height: 44px
-  command-palette-row:
-    backgroundColor: "transparent"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.sm}"
-    padding: 6px 10px
-  command-palette-row-active:
-    backgroundColor: "{colors.surface-card}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.sm}"
-  pill-tab:
-    backgroundColor: "transparent"
-    textColor: "{colors.body}"
-    typography: "{typography.body-sm}"
-    rounded: "{rounded.full}"
-    padding: 4px 10px
-  pill-tab-active:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-sm}"
-    rounded: "{rounded.full}"
-  badge-pro:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark-mute}"
-    typography: "{typography.caption-sm}"
-    rounded: "{rounded.xs}"
-    padding: 2px 6px
-  badge-info-soft:
-    backgroundColor: "{colors.accent-blue-soft}"
-    textColor: "{colors.accent-blue}"
-    typography: "{typography.caption-sm}"
-    rounded: "{rounded.xs}"
-    padding: 2px 8px
-  keycap:
-    backgroundColor: "{colors.surface-card}"
-    textColor: "{colors.body}"
-    typography: "{typography.caption-md}"
-    rounded: "{rounded.xs}"
-    padding: 1px 6px
-    height: 20px
-  command-palette-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.lg}"
-    padding: 0px
-  feature-card-dark:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.lg}"
-    padding: 24px
-  feature-card-elevated:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.lg}"
-    padding: 24px
-  store-extension-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
-    padding: 16px
-  pricing-tier-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.lg}"
-    padding: 24px
-  pricing-tier-card-featured:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.lg}"
-    padding: 24px
-  hero-stripe-band:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.display-xl}"
-    rounded: "{rounded.none}"
-    padding: 96px 48px
-  app-icon-tile:
-    backgroundColor: "{colors.surface-card}"
-    rounded: "{rounded.md}"
-    size: 48px
-  app-icon-tile-large:
-    backgroundColor: "{colors.surface-card}"
-    rounded: "{rounded.md}"
-    size: 64px
-  primary-nav:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-sm-strong}"
-    rounded: "{rounded.none}"
-    height: 56px
-  footer-section:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.body}"
-    typography: "{typography.body-sm}"
-    rounded: "{rounded.none}"
-    padding: 64px 48px
-  link-inline:
-    textColor: "{colors.on-dark}"
-    typography: "{typography.link-md}"
+  hero-band:
+    background:   "{gradients.hero}"
+    minHeight:    100vh
+    decoration:   "three drifting radial orbs (cyan, blue, ice) + dotted SVG grid masked with radial fade"
+    padding:      "pt-32 pb-24, max-w-7xl, center column"
+    bottomFade:   "linear-gradient(180deg, transparent 0%, {colors.white} 100%) over absolute h-32 strip"
+  hero-eyebrow-badge:
+    background:   "{colors.overlay-ice}"
+    border:       "1px solid rgba(167,230,255,0.33)"
+    textColor:    "{colors.ice}"
+    rounded:      "{rounded.pill}"
+    padding:      "6px 16px"
+    leadingIcon:  "Sparkles (lucide) 14px {colors.ice}"
+    typography:   "{typography.eyebrow}"
+  hero-headline:
+    typography:   "{typography.display-xl}"
+    textColor:    "{colors.white}"
+    accentSpan:   "the word 'criptográfica' filled with {gradients.text-cyan} (background-clip:text)"
+    maxWidth:     "20ch"
+  hero-subcopy:
+    typography:   "{typography.body-lg}"
+    textColor:    "{colors.ice}"
+    maxWidth:     "42rem"
+  button-primary-light:
+    background:   "{colors.white}"
+    textColor:    "{colors.navy}"
+    rounded:      "{rounded.pill}"
+    padding:      "14px 28px"
+    typography:   font-medium
+    shadow:       "shadow-lg → shadow-xl on hover; translate-y -2px on hover"
+    trailingIcon: "ArrowRight (lucide) 18px, translateX +4px on hover"
+    use:          hero primary CTA · final CTA card primary CTA
+  button-secondary-glass:
+    background:   "{colors.overlay-white}"
+    border:       "1px solid rgba(167,230,255,0.27)"
+    textColor:    "{colors.white}"
+    rounded:      "{rounded.pill}"
+    padding:      "14px 28px"
+    backdrop:     "blur-md"
+    trailingIcon: "ArrowUpRight (lucide) 18px"
+    use:          hero secondary CTA · final CTA card secondary CTA
+  hero-trust-row:
+    layout:       "flex wrap, gap-x-8 gap-y-3"
+    textColor:    "rgba(167,230,255,0.8)"
+    item:         "CheckCircle2 (lucide) 16px in {colors.cyan} + text {typography.body-sm}"
+    use:          three trust statements under hero CTAs
+  section-eyebrow:
+    typography:   "{typography.eyebrow}"
+    textColor:    "{colors.blue}"
+  feature-grid:
+    grid:         "md:grid-cols-2 gap-5"
+    background:   "{colors.white}"
+    padding:      "py-32 px-6, max-w-7xl"
+  feature-card:
+    background:   "{gradients.feature-card}"
+    border:       "1px solid {colors.hairline-cyan}"
+    rounded:      "{rounded.xl}"
+    padding:      "p-8"
+    iconTile:
+      size:       48px
+      background: "{colors.navy}"
+      iconColor:  "{colors.ice}"
+      rounded:    "{rounded.lg}"
+      iconSize:   22px
+    title:        "{typography.heading-lg} · {colors.navy}"
+    body:         "{typography.body-md} · {colors.body}"
+    decoration:   "absolute -bottom-16 -right-16 40x40 cyan blur orb at opacity 0.4, lifts to 0.7 on group-hover"
+    hover:        "translate-y -1, icon tile scales 1.10x"
+  process-band:
+    background:   "{gradients.process-bg}"
+    padding:      "py-32"
+    timeline:     "absolute 2px hairline using {gradients.step-line}, positioned at the row of step bubbles"
+  step-bubble:
+    size:         56px
+    background:   "{gradients.step-bubble}"
+    color:        "{colors.white}"
+    rounded:      "{rounded.pill}"
+    shadow:       "shadow-lg"
+    icon:         "lucide icon (KeyRound, Vote, BarChart3, Award) 22px"
+  step-tag:
+    typography:   "{typography.step-tag}"
+    color:        "{colors.blue}"
+    text:         "PASO 01..04"
+  stats-band:
+    background:   "{colors.navy}"
+    decoration:   "radial gradient overlay: 20%/30% blue + 80%/70% cyan at opacity 0.3"
+    padding:      "py-24, max-w-7xl"
+    grid:         "grid-cols-2 md:grid-cols-4 gap-8"
+  stat-figure:
+    number:       "{typography.stat-xl} · {colors.white}"
+    unit:         "{colors.cyan} · 0.5em relative size · 0.15em left margin"
+    label:        "{typography.body-sm} · {colors.ice}"
+  archive-section:
+    background:   "{colors.white}"
+    padding:      "py-32 px-6, max-w-7xl"
+    headerLayout: "flex justify-between items-end with archive 'Ver todas' arrow link"
+  election-card:
+    background:   "{colors.white}"
+    border:       "1px solid {colors.hairline-cyan}"
+    rounded:      "{rounded.xl}"
+    padding:      "p-7"
+    hover:        "translate-y -1, shadow-xl"
+    statusPill:
+      tallied:    "background rgba(58,190,249,0.13), dot {colors.blue}"
+      closed:     "background rgba(167,230,255,0.33), dot {colors.cyan}"
+      text:       "{colors.navy} · {typography.caption}"
+    title:        "{typography.heading-lg} · {colors.navy}, line-clamp-2"
+    body:         "{typography.body-sm} · {colors.body}, line-clamp-2"
+    meta:         "Calendar 13px {colors.mute} + locale date · 'Ver detalle' link {colors.blue} with ArrowUpRight 13px"
+  election-skeleton:
+    height:       208px
+    background:   "{colors.ice-soft}"
+    border:       "1px solid rgba(58,190,249,0.13)"
+    rounded:      "{rounded.xl}"
+    motion:       "animate-pulse"
+  final-cta-card:
+    background:   "{gradients.cta-card}"
+    rounded:      "{rounded.hero}"
+    padding:      "p-12 md:p-20"
+    decoration:   "single drifting ice orb at top-right + dotted SVG grid mask"
+    leadingIcon:  "Vote (lucide) 42px {colors.ice}"
+    headline:     "{typography.display-lg} · {colors.white}, maxWidth 22ch"
+    subcopy:      "{colors.ice} · 1.05rem · maxWidth 36rem"
+  error-banner:
+    background:   "{colors.error-bg}"
+    textColor:    "{colors.error-fg}"
+    rounded:      "{rounded.lg}"
+    padding:      "p-4"
+    typography:   "{typography.body-sm}"
 ---
 
 ## Overview
 
-Raycast's marketing site reads like an extended product screenshot. The chrome IS the in-product command palette at marketing scale: pure near-black canvas (`{colors.canvas}` — `#07080a`), hairline 1px borders (`{colors.hairline}` — `#242728`), command-palette-style cards with rounded corners between 6 and 16px, Inter typography with the **ss03 stylistic set enabled site-wide** (a single character — the alternate `g` — that gives Raycast's typography its signature subtle distinction), a single white CTA pill that anchors every primary action, and small splashes of saturated accent reserved for category illustrations.
+ESCOM Voting's marketing home is a **vertical journey from saturated navy to clean white and back**. Six bands stack in this order:
 
-The system has effectively one surface mode — dark — with a faint three-step surface ladder (`{colors.canvas}` → `{colors.surface}` → `{colors.surface-elevated}` → `{colors.surface-card}`) carrying cards, in-card panels, and key-cap glyph backgrounds. The signature decorative moment is a **red diagonal-stripe gradient band** across the very top of the home page hero, used as a launch-banner motif behind the headline (the only time saturated red appears on chrome). Beyond that single moment, color in the chrome is reserved for category accents inside extension and feature illustrations: Hacker News yellow, Slack red, Linear green, info blue.
+1. **Hero** — full-viewport navy → electric-blue gradient with drifting cyan/blue/ice radial orbs, a dotted SVG grid masked with a radial fade, a parallax-translated central column (`useScroll` → `useTransform`), an ice-tinted eyebrow badge, a `display-xl` headline whose accent word is filled with a cyan→ice text-clip gradient, a white pill primary CTA and a glassy ice-bordered secondary CTA, and a three-item trust row anchored by `CheckCircle2` glyphs in cyan.
+2. **Features** — pure white surface with a 2-up grid of softly tinted cards (`feature-card` linear ice→cyan wash), each carrying a 48px navy icon tile in `rounded-lg`, a heading in navy, body in cool slate, and a cyan blur orb tucked into the bottom-right corner that brightens on group-hover.
+3. **Process** — ice-tinted gradient surface fading back to white, with a 4-up step row connected by a thin horizontal `step-line` gradient (navy→blue→cyan→ice). Each step is a 56px navy→blue bubble with a Lucide glyph, a monospace `PASO 0n` tag in blue, a navy title, and a short body line.
+4. **Stats** — full-bleed navy band with two radial gradient overlays (blue at 20/30, cyan at 80/70). Numbers render in tabular-nums white with their unit (`bit`, `%`, etc.) in cyan at 0.5em.
+5. **Closed Elections (archive)** — white surface, 3-up grid of `election-card`s with cyan hairline borders and an ambient bottom-right glow on hover. Status is communicated through a colored dot pill (`TALLIED` → blue dot, `CLOSED` → cyan dot). Loading state is an `animate-pulse` ice-tinted skeleton.
+6. **Final CTA** — a `rounded-[2rem]` hero-radius card filled with the navy→blue→cyan gradient, an ice orb drifting into the top-right corner, the dotted SVG grid layered on top, a 42px Lucide `Vote` icon as the visual anchor, and the same two-CTA pair as the hero (white primary pill + glassy secondary).
 
-The design philosophy is "the marketing page is the product." Section rhythm is generous (`{spacing.section}` 96px) but the page never breaks tonal continuity — the whole site sits in one continuous dark mode, full-bleed product UI screenshots show Raycast's actual command palette / store / AI chat surfaces, and the typography ligature settings (`ss03`) are inherited from the in-product app's text rendering.
-
-**Key Characteristics:**
-- Single dark surface mode with a 4-step surface ladder: `{colors.canvas}` (#07080a) → `{colors.surface}` (#0d0d0d) → `{colors.surface-elevated}` (#101111) → `{colors.surface-card}` (#121212)
-- White CTA pill (`{colors.primary}` — #ffffff) is the universal primary action; everything else is monochrome dark
-- Inter typography with `font-feature-settings: "calt", "kern", "liga", "ss03"` enabled site-wide — the ss03 alternate `g` is part of the brand voice
-- Hairline 1px borders (`{colors.hairline}` — #242728) carry every card edge; there are no drop shadows in the system
-- Multi-radius card vocabulary: `{rounded.sm}` (6px) for keycaps, `{rounded.md}` (8px) for buttons and small cards, `{rounded.lg}` (10px) for feature cards, `{rounded.xl}` (16px) for hero command-palette mockup containers
-- Saturated category accents (`{colors.accent-yellow}` for Hacker News, `{colors.accent-red}` for Slack/Apple, `{colors.accent-green}` for productivity tools, `{colors.accent-blue}` for info) appear only inside extension tile imagery — never on chrome
-- Signature red diagonal-stripe gradient band at the very top of the hero — three angled stripes in `{colors.hero-stripe-start}` → `{colors.hero-stripe-end}`, used once per page maximum
+**Key characteristics:**
+- **Four-stop oceanic palette**: navy `#050C9C` → blue `#3572EF` → cyan `#3ABEF9` → ice `#A7E6FF`. Used in this exact order as the gradient progression on the hero and the final CTA card.
+- **Two surface modes, alternated**: saturated navy/gradient (hero, stats, CTA card) and clean white (features, archive, page background). The process band is the sole transition surface (ice-tinted → white) bridging the two.
+- **No emoji anywhere in chrome.** Iconography is exclusively Lucide React: `ShieldCheck`, `Lock`, `Vote`, `Eye`, `Fingerprint`, `Sparkles`, `ArrowRight`, `ArrowUpRight`, `CheckCircle2`, `KeyRound`, `BarChart3`, `Users`, `ChevronRight`, `Calendar`, `Award`.
+- **CTA pill vocabulary is two-tone**: a white pill on navy (primary), a glass-tinted ice-bordered pill on navy (secondary). Both are `rounded-full` and consistent across the hero and the final CTA card.
+- **All elevation is built from gradients and orb glows.** There are no plain drop shadows in the chrome — shadows are reserved for the white CTA pill and `election-card` hover state.
+- **Framer Motion drives the page**: viewport-staggered entries on every grid, parallax on the hero, and three infinite-loop orb drifts behind the hero gradient. Motion is decorative, not load-bearing — the page is functional with motion disabled.
 
 ## Colors
 
-> **Source pages:** `/` (home), `/store` (extension marketplace), `/core-features/ai` (feature page), `/pricing` (plan tiers), `/thomas/hacker-news` (single extension detail). The chrome palette is identical across all five pages — the dark surface ladder, hairline borders, white CTA, and ss03-enabled typography are the same on every page.
-
-### Brand & Accent
-- **White** (`{colors.primary}` — `#ffffff`): the universal primary CTA pill background. "Download" / "Install Extension" / "Get Pro" — every primary action carries it.
-- **White Pressed** (`{colors.primary-pressed}` — `#e8e8e8`): pressed-state for the primary pill — a single notch dimmer.
-- **On Primary** (`{colors.on-primary}` — `#000000`): pure black text on the white CTA — the only place black appears as text in the system.
+### Brand palette (the four stops)
+- **Navy** (`{colors.navy}` — `#050C9C`): the deep brand color. Hero base, stats wall, final CTA card base, primary headings on white, step bubble origin, election card title color.
+- **Blue** (`{colors.blue}` — `#3572EF`): the primary action and link color. Section eyebrows, step-bubble gradient end-stop, "Ver todas" archive link, election-card "Ver detalle" link, hero-gradient mid-stop.
+- **Cyan** (`{colors.cyan}` — `#3ABEF9`): the secondary accent and "alive" color. Trust-row glyphs in hero, stat-unit text, status dots, hairline color on white cards, gradient hand-off.
+- **Ice** (`{colors.ice}` — `#A7E6FF`): the tertiary glow. Hero body text on navy, ambient orb glow, soft card tint, final CTA leading icon, all secondary text on navy surfaces.
 
 ### Surface
-- **Canvas** (`{colors.canvas}` — `#07080a`): pure-near-black page background. The dominant surface across every page.
-- **Surface** (`{colors.surface}` — `#0d0d0d`): card and elevated panel background — one notch lighter than canvas.
-- **Surface Elevated** (`{colors.surface-elevated}` — `#101111`): button-tertiary fill, text-input fill, store-search-bar fill, pill-tab-active fill.
-- **Surface Card** (`{colors.surface-card}` — `#121212`): app-icon-tile background, keycap fill, command-palette row hover.
-- **Button FG (in-card)** (`{colors.button-fg}` — `#18191a`): rare deep-card variant used inside featured pricing tier card backgrounds.
-- **Hairline** (`{colors.hairline}` — `#242728`): the universal 1px card border. Carries every card edge across every page.
-- **Hairline Soft** (`{colors.hairline-soft}` — `rgba(255,255,255,0.08)`): even fainter border on translucent over-image overlays.
-- **Hairline Strong** (`{colors.hairline-strong}` — `rgba(255,255,255,0.16)`): stronger 1px divider where a regular hairline reads as too soft.
+- **White** (`{colors.white}` — `#ffffff`): primary content surface for the features, archive, and outer wrapper of the final CTA. Also the primary CTA pill background.
+- **Process gradient surface** (`{gradients.process-bg}`): a fading ice-tinted surface that softens the transition from the saturated stats band into the white archive surface.
 
-### Text
-- **Ink** (`{colors.ink}` — `#f4f4f6`): primary headlines on dark canvas. Slightly off-white for tonal coherence with the near-black background.
-- **Body** (`{colors.body}` — `#cdcdcd`): default paragraph text and inline-link color.
-- **Charcoal** (`{colors.charcoal}` — `#d3d3d4`): subtly brighter body where ink reads too soft.
-- **Mute** (`{colors.mute}` — `#9c9c9d`): metadata, footer link text, secondary captions.
-- **Ash** (`{colors.ash}` — `#6a6b6c`): disabled-state text, lowest-emphasis utility.
-- **Stone** (`{colors.stone}` — `#434345`): least-emphasis caption text and disabled icon color.
-- **On Dark** (`{colors.on-dark}` — `#ffffff`): interactive-state primary text (button label, focused tab).
-- **On Dark Mute** (`{colors.on-dark-mute}` — `rgba(255,255,255,0.72)`): translucent secondary text on dark surfaces.
+### Text (on white)
+- **Ink/Navy** (`{colors.navy}` — `#050C9C`): every heading on white surfaces — features, process, archive headlines.
+- **Body** (`{colors.body}` — `#3a4a6b`): default paragraph color on white surfaces.
+- **Mute** (`{colors.mute}` — `#6b7a99`): metadata, election-card date, "Aún no hay elecciones cerradas" empty-state.
+
+### Text (on navy)
+- **White** (`{colors.white}` — `#ffffff`): hero headline, stat numbers, all CTAs on navy.
+- **Ice** (`{colors.ice}` — `#A7E6FF`): hero subcopy, stat label, final CTA subcopy, hero eyebrow.
+- **Ice 80%** (`rgba(167,230,255,0.8)`): hero trust-row text — slightly translucent for hierarchy.
 
 ### Semantic
-- **Accent Blue** (`{colors.accent-blue}` — `#57c1ff`) + **Soft** (`{colors.accent-blue-soft}` — `rgba(87,193,255,0.15)`): info and informational badge — used inside feature illustrations and the rare "New" pill.
-- **Accent Red** (`{colors.accent-red}` — `#ff6161`) + **Soft** (`{colors.accent-red-soft}` — `rgba(255,97,97,0.15)`): destructive/error indicator + Slack/Apple category accent in extension illustrations.
-- **Accent Green** (`{colors.accent-green}` — `#59d499`) + **Soft** (`{colors.accent-green-soft}` — `rgba(89,212,153,0.15)`): success state + productivity category accent in extension illustrations.
-- **Accent Yellow** (`{colors.accent-yellow}` — `#ffc533`) + **Soft** (`{colors.accent-yellow-soft}` — `rgba(255,197,51,0.15)`): "warning" semantic + the Hacker News orange-yellow that appears as the most prominent accent illustration on the home page hero.
+- **Error** (`{colors.error-bg}` / `{colors.error-fg}`): inline error banner inside the archive section when the elections fetch fails.
 
-### Brand Gradient
-- **Hero Stripe Gradient** — three diagonal red stripes layered across the very top of the home page hero, fading from `{colors.hero-stripe-start}` (`#ff5757`) to `{colors.hero-stripe-end}` (`#a1131a`). The system's only chromatic gradient on chrome — used once per page maximum and reserved for hero launch-banner moments.
-- **Keycap Gradient** — the small key-glyph background uses a subtle linear-gradient from `{colors.key-bg-start}` (`#121212`) to `{colors.key-bg-end}` (`#0d0d0d`) that gives Raycast's keycap UI its slight 3D-key feel.
+### Borders
+- **Hairline Cyan** (`{colors.hairline-cyan}` — `rgba(58,190,249,0.27)`): the universal card border on white surfaces — feature cards and election cards.
+- **Hairline Ice** (`{colors.hairline-ice}` — `rgba(167,230,255,0.33)`): ambient borders on translucent overlays (the hero eyebrow badge, the glass secondary CTA).
+
+### Gradients
+The palette is used as gradient material in six specific places. All are oceanic — they progress from navy through blue/cyan into ice, never reversing.
+- **Hero band** (`{gradients.hero}`): the 135° navy → 0a1ab3 → blue diagonal that fills the entire first viewport.
+- **Final CTA card** (`{gradients.cta-card}`): a tighter 135° navy → blue → cyan inside the `rounded-[2rem]` card.
+- **Step bubble** (`{gradients.step-bubble}`): 135° navy → blue inside each 56px step circle.
+- **Cyan text fill** (`{gradients.text-cyan}`): a 120° cyan → ice gradient, clipped to the highlighted hero word via `WebkitBackgroundClip:text`.
+- **Process surface** (`{gradients.process-bg}`): a vertical ice→white fade that bridges the stats wall and the archive section.
+- **Step line** (`{gradients.step-line}`): a horizontal navy → blue → cyan → ice 2px line connecting the four step bubbles.
+- **Feature card wash** (`{gradients.feature-card}`): a 135° ice-13% → cyan-7% wash giving the feature cards their soft tint without making them feel like flat panels.
+- **Orbs** (`{gradients.orb-cyan}`, `{gradients.orb-blue}`, `{gradients.orb-ice}`): three radial gradients used as decorative drifting blur orbs in the hero. Same orb pattern reappears at smaller scale on the final CTA card.
 
 ## Typography
 
-### Font Family
-**Inter** is the system's primary face, loaded with the `Inter Fallback` system fallback variant. Critically, Raycast enables `font-feature-settings: "calt", "kern", "liga", "ss03"` site-wide — the **ss03 stylistic set** swaps in Inter's alternate `g` glyph (single-story open `g`), which is the brand's signature typographic detail. Standard ligatures (`liga`), kerning (`kern`), and contextual alternates (`calt`) are also active. The display tier additionally enables `ss02` and `ss08` and disables standard `liga` to render the hero "Raycast Pro" wordmark with its distinctive geometric construction.
-
-There is no monospace face used outside of inline `<code>` chips in documentation; the marketing pages use Inter for everything.
+### Font family
+Inter, system-ui sans-serif. No custom font features required. Numbers in the stats band use `tabular-nums` so the four-stat row aligns vertically.
 
 ### Hierarchy
 
-| Token | Size | Weight | Line Height | Letter Spacing | Use |
+| Token | Size | Weight | Line H. | Letter Sp. | Use |
 |---|---|---|---|---|---|
-| `{typography.display-xl}` | 64px | 600 | 1.1 | 0 | Hero "Built for the perfect tools" / "The new way to..." headline (with `liga: 0`, `ss02`, `ss08`) |
-| `{typography.display-lg}` | 56px | 500 | 1.17 | 0.2px | Section headline ("Explore", "Pricing", store hero "Store") |
-| `{typography.heading-xl}` | 24px | 500 | 1.6 | 0.2px | Sub-section heading, pricing-tier name |
-| `{typography.heading-lg}` | 22px | 500 | 1.15 | 0 | Mid-section feature heading |
-| `{typography.heading-md}` | 20px | 500 | 1.4 | 0.2px | Card group title, in-card heading |
-| `{typography.heading-sm}` | 18px | 500 | 1.4 | 0.2px | Small heading, extension card title |
-| `{typography.body-lg}` | 18px | 400 | 1.6 | 0 | Pricing tier description, hero subtitle |
-| `{typography.body-md}` | 16px | 400 | 1.6 | 0 | Default body, paragraph text |
-| `{typography.body-strong}` | 16px | 500 | 1.4 | 0.2px | Inline emphasis, primary nav link |
-| `{typography.body-sm}` | 14px | 400 | 1.6 | 0 | Card description, secondary copy |
-| `{typography.body-sm-strong}` | 14px | 500 | 1.6 | 0.2px | In-card label, table-header text |
-| `{typography.caption-md}` | 13px | 400 | 1.4 | 0.1px | Caption, metadata |
-| `{typography.caption-sm}` | 12px | 400 | 1.5 | 0.4px | Smallest utility text, badge label |
-| `{typography.link-md}` | 16px | 500 | 1.4 | 0.3px | Inline body anchor link |
-| `{typography.button-md}` | 14px | 500 | 1.6 | 0.2px | Standard button label |
+| `{typography.display-xl}` | clamp(2.5rem, 6vw, 5.5rem) | 600 | 1.02 | -0.04em | Hero headline |
+| `{typography.display-lg}` | clamp(2rem, 4.5vw, 3.5rem) | 600 | 1.05 | -0.03em | Final CTA headline |
+| `{typography.display-md}` | clamp(2rem, 4vw, 3.25rem) | 600 | 1.05 | -0.03em | Section headlines (features, process) |
+| `{typography.display-sm}` | clamp(1.75rem, 3vw, 2.75rem) | 600 | 1.1 | -0.03em | Archive section heading |
+| `{typography.stat-xl}` | clamp(2.5rem, 5vw, 4rem) | 600 | 1 | -0.04em | Stat numbers (tabular-nums) |
+| `{typography.heading-lg}` | 1.25rem | 600 | 1.3 | -0.02em | Feature & election card titles |
+| `{typography.body-lg}` | 1.15rem | 400 | 1.6 | 0 | Hero subcopy |
+| `{typography.body-md}` | 1rem | 400 | 1.65 | 0 | Default body on white |
+| `{typography.body-sm}` | 0.875rem | 400 | 1.55 | 0 | Step body, secondary copy |
+| `{typography.caption}` | 0.75rem | 500 | 1.4 | 0.05em | Status pill text, metadata |
+| `{typography.eyebrow}` | 0.75rem | 600 | 1.2 | 0.18em UPPER | Section eyebrow ("Por qué", "Cómo funciona", "Archivo público", "ESCOM · Voto digital seguro") |
+| `{typography.step-tag}` | 0.75rem | 600 mono | 1.4 | 0.1em | "PASO 01..04" step labels |
 
 ### Principles
-The hierarchy works on a 1.6-line-height ladder for body and a 1.1–1.4 ladder for display/heading. Letter-spacing is consistently positive (0.1–0.4px) — slightly opening the type — which gives Raycast's chrome an airy quality at body sizes despite the dark canvas. The `ss03` stylistic set is the brand's most distinctive typographic detail; without it, the body face renders identically to plain Inter and loses Raycast's signature rendering.
-
-### Note on Font Substitutes
-Inter is open-source and Google-Fonts-hosted; load it directly. To preserve the brand's signature look, you must enable `font-feature-settings: "calt", "kern", "liga", "ss03"` on the body element. Without `ss03`, the typography is recognizably "Inter default" rather than "Raycast." On systems where Inter cannot be loaded, the documented fallback is `Inter Fallback` (a self-hosted variant) → `system-ui`. **JetBrains Mono** or **Geist Mono** are acceptable substitutes for inline code chips when needed, though Raycast's marketing chrome rarely uses code-styled text.
+- **Aggressively tight letter-spacing on display sizes (-0.03 to -0.04em).** Display headlines are dense and confident, in contrast to the open `0.18em` eyebrows that label each section above the headline.
+- **Hierarchy is built through size + color, not weight.** Every heading is 600; differentiation comes from the navy↔white inversion and the absolute scale jump from `display-xl` (hero) down to `heading-lg` (card titles).
+- **Tabular nums on the stats wall** so the four numbers visually align even with different glyph widths.
 
 ## Layout
 
-### Spacing System
-- **Base unit:** 8px (with 2/4/12px steps for tight inline gaps).
-- **Tokens (front matter):** `{spacing.xxs}` (2px) · `{spacing.xs}` (4px) · `{spacing.sm}` (8px) · `{spacing.md}` (12px) · `{spacing.lg}` (16px) · `{spacing.xl}` (24px) · `{spacing.xxl}` (32px) · `{spacing.section}` (96px).
-- **Universal section rhythm:** every page in the set uses `{spacing.section}` (96px) as the vertical gap between major content blocks. Card grids use `{spacing.lg}` (16px) gutters; in-card padding sits at `{spacing.xl}` (24px) for feature cards and `{spacing.lg}` (16px) for store extension cards.
+### Spacing tokens
+`{spacing.xxs}` 2px · `{spacing.xs}` 4px · `{spacing.sm}` 8px · `{spacing.md}` 12px · `{spacing.lg}` 16px · `{spacing.xl}` 24px · `{spacing.xxl}` 32px · `{spacing.section-sm}` 64px · `{spacing.section}` 96px · `{spacing.section-lg}` 128px.
 
-### Grid & Container
-- **Max width:** ~1240px content area at desktop with 24px gutters (~48px at ultrawide). Hero command-palette mockups run wider (~1080px) with the page background extending to full bleed.
-- **Store extension grid:** 2-up at desktop with rows of 2 cards stacked, collapsing to 1-up at mobile. Each card is a horizontal layout with a large square app icon at the left and copy + Install button at the right.
-- **Pricing tier grid:** 3-up at desktop (Free / Pro / Pro+Advanced AI), collapsing to 1-up stacked at mobile.
-- **Featured extension card grid:** 3-up at desktop in the "Featured" row at the top of the store page.
-- **Comparison table:** full-width on the pricing page below the tier cards — 5-column table (Free / Pro / Advanced AI / Custom for Teams / Enterprise) with feature rows.
-- **Footer:** 6-column horizontal link grid at desktop, collapsing to 2-up at tablet and 1-up at mobile.
+### Section rhythm
+The four white/tinted sections (features, process, archive, final CTA) use `py-32` (128px vertical). The stats band uses `py-24` (96px). The hero is `min-h-screen` with `pt-32 pb-24` inside its parallax column. Inside any section, the column is capped to `max-w-7xl` with `px-6` outer gutters.
 
-### Whitespace Philosophy
-Whitespace is generous and the canvas is uninterrupted. Sections sit 96px apart with no decorative dividers between them — the dark canvas continues edge-to-edge from hero to footer. Inside a section, content is left-aligned in a tight column, with command-palette mockup imagery occupying the right 50–60% of the band on home-page feature rows. The signature decorative element — the red diagonal-stripe gradient band — only appears in the very first hero band; from the second section down, the page is monochrome dark.
+### Grids
+- **Features**: `md:grid-cols-2 gap-5` — 2-up at desktop, 1-up at mobile.
+- **Process**: `md:grid-cols-4 gap-6` — 4-up at desktop with the step-line gradient connecting bubbles, 1-up stacked at mobile (step line hides on `md` breakpoint).
+- **Stats**: `grid-cols-2 md:grid-cols-4 gap-8` — 4-up at desktop, 2-up at mobile.
+- **Closed Elections**: `md:grid-cols-3 gap-5` — 3-up at desktop, 1-up at mobile.
+- **Hero, final CTA**: single centered column, no grid.
+
+### Whitespace philosophy
+Whitespace is generous (`py-32` between content bands) but the transitions are choreographed. The page never just drops from saturated navy onto white — there's always a `bottom-fade` strip on the hero blending into the next section's background, or an `ice-tinted` process surface acting as the bridge from the stats wall into the white archive. The result is one continuous vertical scroll, not six disconnected cards.
 
 ## Elevation & Depth
 
 | Level | Treatment | Use |
 |---|---|---|
-| 0 — Flat | No border, no shadow | Default for canvas-on-canvas blocks, hero text, footer body |
-| 1 — Hairline border | 1px solid `{colors.hairline}` (#242728) | Every card on `{colors.surface}`, store extension card, pricing tier card |
-| 2 — Hairline strong | 1px solid `{colors.hairline-strong}` | Stronger inline divider, table-row separator on the comparison table |
-| 3 — Surface ladder elevation | `{colors.canvas}` → `{colors.surface}` → `{colors.surface-elevated}` → `{colors.surface-card}` | Multi-step background-color ladder used to create elevation without shadows |
+| 0 — Flat | No border, no shadow | Default for canvas-on-canvas blocks, stats band, hero copy |
+| 1 — Hairline cyan | 1px solid `{colors.hairline-cyan}` | Feature cards, election cards on white |
+| 2 — Hairline ice | 1px solid `{colors.hairline-ice}` | Hero eyebrow badge, glass secondary CTA |
+| 3 — Drop shadow | `shadow-lg` → `shadow-xl` on hover | White CTA pills only; election cards on hover only |
+| 4 — Orb glow | Radial gradient blur orb behind the chrome | Hero (3 drifting), feature card corner, final CTA corner |
 
-The system has no drop-shadow elevation at all. Depth is built entirely from the surface-color ladder: each notch lighter on the dark scale reads as one step closer to the viewer.
+The system has no surface-color ladder. Depth is instead built from **gradients and ambient glow**: the navy→blue hero gradient feels like infinite depth behind the parallax content; the cyan corner orbs on feature cards visually push the card forward without a shadow. Shadow is reserved exclusively for the white CTA pill and the election card hover state — both moments where the user is actively interacting and a physical lift is appropriate.
 
-### Decorative Depth
-Depth comes from product imagery and a single stripe-gradient band:
-- **Hero stripe gradient** — three diagonal red stripes (`{colors.hero-stripe-start}` → `{colors.hero-stripe-end}`) layered across the home-page hero band, evoking a launch-banner / motion-blur effect. The system's signature decorative moment.
-- **Command-palette mockups** — full-fidelity Raycast in-product UI screenshots (the actual Spotlight-style overlay with rounded keycaps, command rows, and accent-color glyphs) sitting inside the home-page hero and feature rows. These ARE the brand decoration.
-- **App icon tiles** — small 48–64px rounded-corner tiles displaying real app icons (Slack, Spotify, Figma, Notion, Linear, Hacker News) inside store and feature illustrations.
-- **Keycap glyphs** — subtle gradient-filled rounded keycap glyphs used inline to indicate keyboard shortcuts (e.g., `⌘ K`), with a faint `{colors.key-bg-start}` → `{colors.key-bg-end}` linear gradient suggesting a physical key surface.
+### Decorative depth
+- **Hero orbs** — three independent infinite-loop radial-gradient blur orbs (cyan, blue, ice) drift across the hero band at 18s / 22s / 25s easing.
+- **Grid mask** — a 28px-pitch dotted SVG pattern masked with a radial fade. Used on the hero band and the final CTA card.
+- **Final-CTA orb** — a single ice radial orb drifts in the top-right of the CTA card on a 14s loop.
+- **Feature card glow** — a stationary cyan blur orb tucked into the `-bottom-16 -right-16` corner of every feature card, scaling its opacity from 0.4 to 0.7 on group-hover.
 
 ## Shapes
 
-### Border Radius Scale
+### Border radius scale
 
 | Token | Value | Use |
 |---|---|---|
-| `{rounded.none}` | 0px | Hero band, primary nav, footer, full-bleed structural surfaces |
-| `{rounded.xs}` | 4px | Keycap glyphs, badge-pro chips, small inline tags |
-| `{rounded.sm}` | 6px | Command-palette row, inline buttons, micro chips |
-| `{rounded.md}` | 8px | Standard buttons, text inputs, store search bar, app-icon tiles, store extension card |
-| `{rounded.lg}` | 10px | Feature card, command-palette mockup card, pricing tier card |
-| `{rounded.xl}` | 16px | Large hero command-palette mockup container, oversized feature panel |
-| `{rounded.full}` | 9999px | Pill-tab chips, avatar circles |
+| `{rounded.none}` | 0px | Full-bleed bands (hero gradient, stats wall, page wrapper) |
+| `{rounded.sm}` | 6px | Small inline elements, status dots |
+| `{rounded.md}` | 12px | Soft inline buttons (currently reserved) |
+| `{rounded.lg}` | 16px | Feature-card icon tile (`rounded-xl` in Tailwind) |
+| `{rounded.xl}` | 20px | Feature cards, election cards (`rounded-2xl` in Tailwind) |
+| `{rounded.hero}` | 32px | Final CTA card (`rounded-[2rem]`) |
+| `{rounded.pill}` | 9999px | Every CTA pill, status chip, eyebrow badge, step bubble |
 
-The radius vocabulary clusters tightly between 4 and 16px, with most chrome at 6–10px. The system never goes flat (0px) on cards and never above 16px except for fully-rounded pills.
+The vocabulary clusters tight (12–20px on cards) with the final CTA card jumping to 32px to act as the visual "anchor" before the footer. Every CTA is `rounded-full` — pills are the system's primary action vocabulary.
 
-### Photography Geometry
-There is no traditional photography. Visual elements are limited to:
-- **Command-palette mockups** — full-fidelity Raycast UI screenshots at 16:9 or 4:3 aspect inside `{rounded.xl}` (16px) containers.
-- **App icon tiles** — 48–64px square at `{rounded.md}` (8px), displaying real app icons.
-- **Avatar circles** — 32–40px at `{rounded.full}` for in-extension author attribution.
-- **Hero stripe gradient** — full-bleed wash with no aspect ratio.
+### Iconography geometry
+- **Lucide React** is the only icon set in the chrome. Stroke icons, 1.5px default stroke.
+- **Sizes used**: 13px (election-card meta), 14px (hero eyebrow Sparkles), 16px (trust row CheckCircle2 + chevrons), 18px (CTA arrows), 22px (feature icon tile + step bubble + Users on election card), 42px (final CTA Vote icon).
+- No emojis appear in the chrome.
 
 ## Components
 
-> **No hover states documented** per system policy. Each spec covers Default and Active/Pressed only.
+> Default and active/pressed states only. Hover behavior is documented per component.
 
-### Buttons
+### Buttons / CTAs
 
-**`button-primary`** — the universal Raycast CTA
-- Background `{colors.primary}` (white), text `{colors.on-primary}` (black), type `{typography.button-md}`, padding `8px 16px`, height ~36px, rounded `{rounded.md}`.
-- Used for "Download" (sticky top-nav CTA), "Get Pro", "Install" — every primary action across every surface.
-- Pressed state lives in `button-primary-pressed` — background dims to `{colors.primary-pressed}`.
+**`button-primary-light`** — the universal hero & final CTA primary action.
+- Background `{colors.white}`, text `{colors.navy}`, `{rounded.pill}`, padding `14px 28px`, `shadow-lg`.
+- Trailing icon: Lucide `ArrowRight` at 18px that translates +4px on group-hover.
+- Hover: `shadow-xl` + `-translate-y-0.5`.
+- Labels: "Emitir mi voto" (hero), "Acceder al sistema" (final CTA).
 
-**`button-secondary`** — transparent text button
-- Background transparent, text `{colors.on-dark}`, type `{typography.button-md}`, padding `8px 16px`, height ~36px, rounded `{rounded.md}`.
-- Lower-emphasis action: "Sign in" (top nav), "Learn more →", "View on GitHub".
+**`button-secondary-glass`** — the secondary action that pairs with the primary on every navy surface.
+- Background `{colors.overlay-white}`, 1px `{colors.hairline-ice}` border, text `{colors.white}`, `backdrop-blur-md`, same padding and radius as the primary.
+- Trailing icon: Lucide `ArrowUpRight` at 18px.
+- Labels: "Ver resultados públicos" (hero), "Explorar resultados" (final CTA).
 
-**`button-tertiary`** — soft surface button
-- Background `{colors.surface-elevated}`, text `{colors.on-dark}`, type `{typography.button-md}`, padding `8px 16px`, height ~36px, rounded `{rounded.md}`.
-- Mid-emphasis: "Watch demo", "View extension", "Manage" buttons inside cards.
+### Section eyebrows & headlines
+Every section opens with a `{typography.eyebrow}` label in `{colors.blue}` followed by a `{typography.display-md}` or `{typography.display-sm}` headline in `{colors.navy}`. The headlines on dark sections (hero, final CTA) instead use `{colors.white}` with the accent word filled by `{gradients.text-cyan}`.
 
-**`button-disabled`**
-- Background `{colors.surface-elevated}`, text `{colors.ash}` — dim utility state.
+### Feature cards
+**`feature-card`** — 2-up grid card.
+- Background `{gradients.feature-card}`, 1px `{colors.hairline-cyan}` border, `{rounded.xl}`, padding 32px (`p-8`).
+- Icon tile: 48×48 `{colors.navy}` background with Lucide icon at 22px in `{colors.ice}`, `{rounded.lg}` (`rounded-xl`).
+- Title: `{typography.heading-lg}` `{colors.navy}`.
+- Body: `{typography.body-md}` `{colors.body}`.
+- Decoration: cyan blur orb at `-bottom-16 -right-16` at opacity 0.4.
+- Hover: card `-translate-y-1`, icon tile `scale-1.10`, decoration orb opacity 0.4 → 0.7.
 
-**`install-button`** — the store-page install pill
-- Background transparent with 1px solid `{colors.hairline-strong}` border, text `{colors.on-dark}`, type `{typography.button-md}`, padding `6px 14px`, rounded `{rounded.md}`.
-- Sits at the right edge of every store extension card with the label "Install Extension".
+### Process steps
+**`step-bubble`** + **`step-tag`** + **step-body** — a single step in the 4-up process row.
+- 56×56 bubble with `{gradients.step-bubble}` background and `shadow-lg`. Lucide icon at 22px in white.
+- Below: monospace `{typography.step-tag}` "PASO 0n" in `{colors.blue}`.
+- Below: title in `{typography.heading-lg}` `{colors.navy}`, body in `{typography.body-sm}` `{colors.body}`.
+- A 2px `{gradients.step-line}` runs horizontally behind the bubbles (`absolute top-7 left-[12%] right-[12%]`). Hidden at mobile breakpoint.
 
-### Filter & Tab Chips
+### Stat figure
+**`stat-figure`** — one of the four numbers on the navy stats band.
+- Number: `{typography.stat-xl}` `{colors.white}` with `tabular-nums`.
+- Unit: same number wrapper, font-size 0.5em, color `{colors.cyan}`, margin-left 0.15em.
+- Label: `{typography.body-sm}` `{colors.ice}` rendered below the number.
+- Layout: text-center at mobile, text-left at md+.
 
-**`pill-tab`** + **`pill-tab-active`** — small filter chip strip
-- Default: transparent background, text `{colors.body}`, type `{typography.body-sm}`, padding `4px 10px`, rounded `{rounded.full}`.
-- Active: background flips to `{colors.surface-elevated}`, text `{colors.on-dark}` — the chip "lifts" by one surface notch.
-- Used in the store filter row ("All Extensions", "Recently Added", "Most Popular") and similar segmented controls.
+### Election cards (archive)
+**`election-card`** — 3-up grid card in the archive section.
+- Background `{colors.white}`, 1px `{colors.hairline-cyan}` border, `{rounded.xl}`, padding 28px (`p-7`).
+- Top row: status pill at left, Lucide `Users` icon at right.
+- Status pill: `rounded-full` 6×10px padding with a 6px dot at the leading edge. Dot color = `{colors.blue}` for `TALLIED`, `{colors.cyan}` for `CLOSED`. Pill background tinted accordingly.
+- Title: `{typography.heading-lg}` `{colors.navy}`, 2-line clamp.
+- Body: `{typography.body-sm}` `{colors.body}`, 2-line clamp.
+- Footer row: `Calendar` 13px + locale date in `{colors.mute}`; "Ver detalle" link in `{colors.blue}` with `ArrowUpRight` 13px.
+- Hover: card `-translate-y-1`, `shadow-xl`, link gap grows.
 
-**`badge-pro`** — small Pro/Plan label
-- Background `{colors.surface-elevated}`, text `{colors.on-dark-mute}`, type `{typography.caption-sm}`, padding `2px 6px`, rounded `{rounded.xs}`.
-- Inline "Pro" / "Pro+" / "Free" tier indicators on pricing tier cards.
+**`election-skeleton`** — placeholder while elections load.
+- 208px tall block with `{colors.ice-soft}` background, `{colors.hairline-cyan}` border (lighter variant), `{rounded.xl}`, `animate-pulse`.
 
-**`badge-info-soft`** — translucent info chip
-- Background `{colors.accent-blue-soft}`, text `{colors.accent-blue}`, type `{typography.caption-sm}`, padding `2px 8px`, rounded `{rounded.xs}`.
-- Rare "New" / "Beta" inline tag.
+### Final CTA card
+**`final-cta-card`** — the closing surface before the footer.
+- `rounded-[2rem]` card with `{gradients.cta-card}` background, 80–96px inner padding (`p-12 md:p-20`).
+- Decoration: drifting ice orb (top-right), dotted SVG grid mask layered on top.
+- Leading icon: Lucide `Vote` at 42px in `{colors.ice}`.
+- Headline: `{typography.display-lg}` `{colors.white}`, maxWidth 22ch.
+- Subcopy: 1.05rem `{colors.ice}` line-height 1.6, maxWidth 36rem.
+- CTAs: the same pair as the hero (`button-primary-light` + `button-secondary-glass`).
 
-### Inputs & Forms
+### Inline banners
+**`error-banner`** — only used when the archive fetch fails.
+- `{colors.error-bg}` background, `{colors.error-fg}` text, `{typography.body-sm}`, `rounded-lg`, padding 16px (`p-4`).
 
-**`text-input`** + **`text-input-focused`**
-- Default: background `{colors.surface-elevated}`, text `{colors.on-dark}`, 1px solid `{colors.hairline}`, type `{typography.body-md}`, padding `8px 12px`, height ~36px, rounded `{rounded.md}`.
-- Focused: same surface; 1px border becomes `{colors.hairline-strong}` — a subtle brightening rather than a colored ring.
+## Motion
 
-**`store-search-bar`** — the store-page search field
-- Background `{colors.surface-elevated}`, text `{colors.on-dark}`, type `{typography.body-md}`, padding `10px 16px`, height ~44px, rounded `{rounded.md}`.
-- Sits at the top of the store page hero with a magnifier icon at the left and "Search the store..." placeholder. Slightly taller than the standard `text-input`.
+Framer Motion drives every section. All entries respect `viewport={{ once: true }}` so they fire once on scroll-into-view.
 
-### Cards & Containers
+| Surface | Behavior |
+|---|---|
+| Hero column | `useScroll` → `useTransform(scrollY, [0,400], [0,80])` on `y` and `[1, 0.4]` on opacity — gentle parallax fade as the user scrolls past |
+| Hero entry stack | Eyebrow → headline → subcopy → CTAs → trust row, with delays 0 / 0.1 / 0.25 / 0.4 / 0.55 |
+| Hero orbs | Three infinite-loop translations: orb-cyan (18s), orb-blue (22s), orb-ice (25s), all `easeInOut` |
+| Feature card grid | `opacity 0→1, y 30→0` over 0.5s with stagger delay `i * 0.08` |
+| Process steps | `opacity 0→1, y 24→0` over 0.5s with stagger delay `i * 0.12` |
+| Stats band | `opacity 0→1, y 20→0` over 0.5s with stagger delay `i * 0.08` |
+| Election cards | `opacity 0→1, y 20→0` over 0.4s with stagger delay `i * 0.08` |
+| Final CTA orb | Single infinite-loop ice orb drift, 14s `easeInOut` |
+| CTA arrow icons | `translate-x +4px` on group-hover |
+| Link gap | Tailwind `gap-1.5 → gap-2.5` on hover for the "Ver todas" archive link |
 
-**`command-palette-card`** — the home-page hero command-palette mockup
-- Container: background `{colors.surface}`, 1px solid `{colors.hairline}`, padding 0 (the mockup contents fill the card), rounded `{rounded.lg}` or `{rounded.xl}` depending on hero size.
-- Layout: top header strip with macOS traffic-light dots + a search input row, body with a vertical stack of `{component.command-palette-row}` items, bottom-right keycap hint cluster.
-
-**`command-palette-row`** + **`command-palette-row-active`** — single row inside the command palette
-- Default: transparent background, text `{colors.on-dark}` in `{typography.body-md}`, padding `6px 10px`, rounded `{rounded.sm}`.
-- Active: background `{colors.surface-card}` (one notch lighter than the surrounding palette card) — the selection state.
-- Each row contains a small app-icon tile + label + optional keycap shortcut at the right edge.
-
-**`feature-card-dark`** — standard product feature card
-- Container: background `{colors.surface}`, 1px solid `{colors.hairline}`, padding `{spacing.xl}` (24px), rounded `{rounded.lg}`.
-- Used in 2- or 3-up grids on home and feature pages — pairs a small product mockup or app-icon row with body copy and a "Learn more →" `{component.button-secondary}`.
-
-**`feature-card-elevated`** — slightly-elevated variant
-- Same chrome as `feature-card-dark` but background flips to `{colors.surface-elevated}` — used to break visual rhythm in alternating feature rows.
-
-**`store-extension-card`** — store-page extension card
-- Container: background `{colors.surface}`, 1px solid `{colors.hairline}`, padding `{spacing.lg}` (16px), rounded `{rounded.md}`.
-- Layout: 48px `{component.app-icon-tile}` at left, vertical stack of name + by-author metadata + 1-line description in the center, `{component.install-button}` at the right edge.
-
-**`pricing-tier-card`** — pricing plan card (default tier)
-- Container: background `{colors.surface}`, 1px solid `{colors.hairline}`, padding `{spacing.xl}` (24px), rounded `{rounded.lg}`.
-- Layout: tier name in `{typography.heading-xl}` (24px), price in larger numeric in `{typography.display-lg}`, body description in `{typography.body-lg}`, CTA `{component.button-primary}` (or `{component.button-secondary}` for free tier), feature checklist with `✓` glyphs.
-
-**`pricing-tier-card-featured`** — middle "Pro" featured tier
-- Same chrome but background flips to `{colors.surface-elevated}` (one notch lighter) — the only visual cue distinguishing the featured tier from the surrounding cards.
-
-**`hero-stripe-band`** — home-page hero with red stripe gradient
-- Background `{colors.canvas}` with three diagonal red stripes layered across the top half (`{colors.hero-stripe-start}` → `{colors.hero-stripe-end}`).
-- Padding `{spacing.section}` 96px vertical / 48px horizontal, rounded `{rounded.none}`.
-- Carries the hero headline in `{typography.display-xl}` and a single `{component.button-primary}` "Download" CTA.
-
-### Decorative
-
-**`app-icon-tile`** — small 48px square app icon
-- Background `{colors.surface-card}`, padding 0 (icon fills the tile), rounded `{rounded.md}`, size 48×48.
-- Used in command-palette rows and store extension cards.
-
-**`app-icon-tile-large`** — 64px feature variant
-- Same but at 64×64. Used in featured store cards and home-page hero illustration rows.
-
-**`keycap`** — keyboard shortcut glyph
-- Background `{colors.surface-card}` with a subtle linear gradient `{colors.key-bg-start}` → `{colors.key-bg-end}`, text `{colors.body}` in `{typography.caption-md}`, padding `1px 6px`, height ~20px, rounded `{rounded.xs}`.
-- Renders inline command-palette shortcut hints like `⌘ K`, `⏎`, `Esc`. The signature "physical-key" feel on a flat dark canvas.
-
-### Navigation
-
-**`primary-nav`**
-- Background `{colors.canvas}`, text `{colors.on-dark}`, height ~56px, type `{typography.body-sm-strong}`, rounded `{rounded.none}`, with a 1px `{colors.hairline}` bottom rule.
-- Layout (desktop): Raycast wordmark at left, centered nav cluster ("Pro · AI · Store · Manual · Changelog · Blog · Pricing"), right cluster (Sign in link + the always-white `{component.button-primary}` "Download" CTA pill).
-
-**Top Nav (Mobile)**
-- Hamburger menu icon at left, Raycast wordmark at center, "Download" white CTA pill at right. Primary nav collapses into a full-screen drawer that slides from the left.
-
-### Footer
-
-**`footer-section`**
-- Background `{colors.canvas}`, text `{colors.body}` in `{typography.body-sm}`, padding `64px 48px`, with a 1px `{colors.hairline}` top rule.
-- Layout: 6-column horizontal link grid (Product · Core Features · Top Extensions · Company · Community · By Raycast) with column headers in `{typography.body-sm-strong}` `{colors.on-dark}` and link lists in `{typography.body-sm}` `{colors.body}`.
-- Bottom row: small Raycast wordmark + a subscribe newsletter input field with `{component.button-primary}` "Subscribe" at the right.
-- The very top of the footer band has a faint red stripe-gradient repeat — a smaller echo of the hero's diagonal stripe motif.
-
-### Inline
-
-**`link-inline`** — body-prose anchor link
-- `{colors.on-dark}` text with no underline by default; underlines on focus. Inline body links are full-white rather than a tinted accent color, which keeps the dark canvas tonally pure.
+Motion is decorative. The page reads cleanly with `prefers-reduced-motion` honored by Framer Motion's defaults.
 
 ## Do's and Don'ts
 
 ### Do
-- Render the entire site in one continuous dark mode. There is no light variant in the system.
-- Use `{colors.primary}` (white pill) for every primary CTA. There is no second primary color — white IS the brand action.
-- Build elevation from the surface-color ladder (`{colors.canvas}` → `{colors.surface}` → `{colors.surface-elevated}` → `{colors.surface-card}`), never from drop shadows.
-- Enable `font-feature-settings: "calt", "kern", "liga", "ss03"` on the body element. The ss03 alternate `g` is part of the brand identity.
-- Anchor a `{component.command-palette-card}` mockup as the hero's load-bearing visual. Real Raycast UI is the brand.
-- Use `{component.keycap}` glyphs inline to indicate keyboard shortcuts. Subtle key-bg gradient (`{colors.key-bg-start}` → `{colors.key-bg-end}`) is the brand's only "depth" decoration.
-- Reserve `{colors.hero-stripe-start}` → `{colors.hero-stripe-end}` red gradient for the hero band exactly once per page. Never repeat the stripe gradient deeper in the page.
-- Use saturated category accents (`{colors.accent-yellow}`, `{colors.accent-red}`, `{colors.accent-green}`, `{colors.accent-blue}`) only inside extension and feature illustrations — never on chrome buttons or text.
+- Use the four-stop palette **in order**: navy → blue → cyan → ice. Gradients should never reverse the order.
+- Anchor every "primary moment" surface (hero, final CTA card) with a saturated gradient + drifting orbs + dotted grid mask + a single white CTA pill.
+- Use **Lucide React** for all iconography. No emoji in the chrome.
+- Build elevation from gradients and blur orbs first; reach for `shadow-lg/xl` only on interactive CTAs and card hover.
+- Pair every primary CTA with a glassy ice-bordered secondary CTA. The two-CTA pattern is the universal call-to-action vocabulary.
+- Keep section eyebrows in `{colors.blue}` with `0.18em` tracking and `uppercase`. Always above the headline, never below.
+- Use `tabular-nums` on numeric grids (the stats wall) so figures align vertically.
+- Mask the dotted SVG grid with a radial-fade so it never extends to the section edge.
 
 ### Don't
-- Don't introduce a light mode. The system is dark-only by design.
-- Don't add drop shadows on cards. Elevation is built from the surface ladder, not from shadows.
-- Don't replace `{colors.primary}` (white) with a tinted accent for the primary CTA. Pure white is the brand action color.
-- Don't use the saturated accent colors (`{colors.accent-yellow}`, `{colors.accent-red}`, `{colors.accent-green}`, `{colors.accent-blue}`) on text, buttons, or chrome surfaces. They belong inside extension illustrations.
-- Don't repeat the hero stripe gradient outside the top hero band. The one-band rule is the system's restraint.
-- Don't use Inter without the `ss03` feature flag enabled. The chrome will lose its signature voice.
-- Don't pad cards with 32px+ on all sides. The system runs tight at 16–24px in-card padding.
+- Don't introduce a fifth brand color. The system has exactly four stops.
+- Don't use any saturated accent (navy, blue, cyan, ice) on solid CTA buttons. CTAs are white on navy, or glass on navy. Never blue-fill.
+- Don't reverse gradient direction. The page is a navy → blue → cyan → ice ocean; reversing breaks the visual rhythm.
+- Don't drop the parallax / orb motion on the hero. The hero feels static without it.
+- Don't use emojis. The brand vocabulary is Lucide React glyphs.
+- Don't add a drop shadow to feature cards or stat figures. Their depth is built from gradient washes and corner orbs.
+- Don't pad cards past 32px on all sides — the system runs tight at `p-7` to `p-8` for cards and `p-12 → p-20` only for the final CTA hero card.
+- Don't introduce a light-mode/dark-mode dichotomy. The page is intentionally one mode with alternating saturated/white surfaces.
 
-## Responsive Behavior
+## Responsive behavior
 
-### Breakpoints
+### Breakpoints (Tailwind)
 
-| Name | Width | Key Changes |
+| Name | Width | Key changes |
 |---|---|---|
-| ultrawide | 1920px+ | Content max-width holds at 1240px; outer gutters grow to ~80px |
-| desktop-large | 1440px | Default — 3-up pricing grid, 2-up store extension grid |
-| desktop | 1280px | Same with narrower outer gutters |
-| desktop-small | 1024px | 3-up pricing collapses to 2+1; primary nav remains horizontal |
-| tablet | 768px | Pricing → 1-up stacked; primary nav becomes hamburger drawer |
-| mobile | 480px | Single-column everything; hero `{typography.display-xl}` scales 64px → ~36px |
-| mobile-narrow | 320px | Section padding tightens to 48px |
+| `2xl` | 1536px+ | Hero headline lands at 5.5rem; outer gutters relax via `max-w-7xl` |
+| `xl` | 1280px | Default — 2-up features, 4-up process, 4-up stats, 3-up archive |
+| `lg` | 1024px | Same; outer gutters tighten via `px-6` |
+| `md` | 768px | Maintains multi-column grids; hero column stays single |
+| `<md` | <768px | Feature grid → 1-up; process step-line **hides**, steps stack; stats → 2-up; archive → 1-up; CTA pills wrap; hero headline clamps to 2.5rem |
 
-### Touch Targets
-All interactive elements meet WCAG AA at 36px+. `{component.button-primary}` and `{component.button-tertiary}` sit at 36px height with 16px padding. `{component.text-input}` sits at 36px. `{component.store-search-bar}` sits at 44px (above AAA). `{component.pill-tab}` is ~24–28px height with 10px padding extending to 36–40px tappable via inline padding (above AA but below AAA — intentional, the chips are compact). `{component.install-button}` sits at ~32px height with 14px padding.
+### Touch targets
+All CTAs (`button-primary-light`, `button-secondary-glass`) sit at ~52px tall (14px vertical padding + 16px line-height + 18px icon) — comfortably above WCAG AAA. Status pills are decorative-only and not interactive. Cards (`feature-card`, `election-card`) are 200px+ tappable areas.
 
-### Collapsing Strategy
-- **Primary nav:** desktop horizontal cluster → tablet hamburger drawer at 768px. The white "Download" CTA stays visible at every breakpoint.
-- **Hero command-palette mockup:** desktop full-fidelity 2-column with copy at left + mockup at right → tablet stacks vertical with mockup below copy → mobile mockup scales down to ~80% width.
-- **Store extension grid:** 2-up → 1-up at tablet.
-- **Pricing tier grid:** 3-up → 2+1 at desktop-small → 1-up stacked at tablet.
-- **Comparison table:** desktop full 5-column → tablet horizontal scroll → mobile vertical card stack with one tier per card.
-- **Footer:** 6-up link columns → 3-up at tablet → 2-up at mobile-landscape → 1-up at mobile.
-- **Section padding:** `{spacing.section}` (96px) desktop → 64px tablet → 48px mobile.
-- **Hero headline:** `{typography.display-xl}` (64px) at desktop, scaling 56px / 44px / 36px down the breakpoint stack.
+### Collapsing strategy
+- **Hero CTAs**: flex-wrap at narrow widths, retaining the primary above the secondary.
+- **Hero headline**: `clamp(2.5rem, 6vw, 5.5rem)` so the headline gracefully scales between 40px and 88px without breakpoints.
+- **Stats**: 4-up → 2-up at `<md`; text-alignment shifts left → center.
+- **Process step-line**: hidden at `<md` (`hidden md:block`). Steps stack vertically with the bubble centered.
+- **Final CTA card**: padding `p-12` → `p-20` at `md+`.
+- **Footer fade strip**: an absolute 128px gradient strip at the hero's bottom blends into the next section regardless of breakpoint.
 
-### Image Behavior
-The only "imagery" in the system is in-product Raycast UI screenshots and small app-icon assets:
-- **Command-palette mockups** scale fluidly with the container; the in-product UI itself is responsive and re-renders for each breakpoint.
-- **App-icon tiles** stay at 48–64px fixed size at every breakpoint; they tile in flexible rows that wrap at narrower widths.
-- **Hero stripe gradient** stays at the top of the hero band at every breakpoint with the stripe angle preserved.
+## Iteration guide
 
-## Iteration Guide
+1. Operate one section at a time. The six sections of `HomePage.tsx` (`Hero`, `FeaturesGrid`, `Process`, `StatsBand`, `ClosedElections`, `FinalCta`) are independent — change one without touching the others.
+2. Always reference palette stops by token (`{colors.navy}`, `{colors.blue}`, `{colors.cyan}`, `{colors.ice}`) and gradient by ID (`{gradients.hero}`, `{gradients.cta-card}`, etc.).
+3. Add new icons by importing from `lucide-react`. Do not introduce custom SVGs unless adding a new decorative pattern (e.g., a second `GridDots` variant).
+4. New sections should follow the rhythm: section eyebrow → display headline → grid or content → optional CTA row. Keep `py-32` vertical and `max-w-7xl` width unless there's a structural reason to break it.
+5. New CTAs must use one of the two pill variants (`button-primary-light` or `button-secondary-glass`). Do not create a third CTA style.
+6. When introducing motion, keep entries staggered (delay `i * 0.08–0.12`) and respect `viewport={{ once: true }}`. Infinite loops are reserved for ambient orb drift only.
+7. When in doubt, reach for gradient depth before reaching for a drop shadow. The brand identity is "oceanic gradient," not "card elevation."
 
-1. Focus on ONE component at a time. Pull its YAML entry and verify every property resolves.
-2. Reference component names and tokens directly (`{colors.primary}`, `{component.button-primary-pressed}`, `{rounded.md}`) — do not paraphrase.
-3. Run `npx @google/design.md lint DESIGN.md` after edits — `broken-ref`, `contrast-ratio`, and `orphaned-tokens` warnings flag issues automatically.
-4. Add new variants as separate component entries (`-pressed`, `-disabled`, `-active`) — do not bury them inside prose.
-5. Default body to `{typography.body-md}` (16px / 400 / 1.6); reach for `{typography.body-strong}` for emphasis; reserve `{typography.display-xl}` strictly for the hero band.
-6. Keep `{colors.primary}` (white CTA pill) scarce per viewport — at most one solid white pill per fold.
-7. When introducing a new component, ask whether it can be expressed with the existing surface-ladder + 8px-radius + ss03-Inter vocabulary before adding new tokens. The system's strength is that it almost never needs new ones.
+## Known gaps
 
-## Known Gaps
-
-- **Mobile screenshots not captured** — responsive behavior synthesizes Raycast's mobile pattern (hamburger drawer, single-column grid, hero downscale) from desktop evidence and the breakpoint stack.
-- **Hover states not documented** by system policy. Raycast's in-product app has rich hover behavior on command-palette rows that this document doesn't capture.
-- **In-product app chrome** (the actual Raycast launcher running on macOS) is referenced in marketing screenshots but not documented as a separate UI system here. The marketing site is documented; the in-product app surface is its own design system.
-- **Dark mode is the only mode** — no light variant exists in the captured surfaces.
-- **Form validation states** beyond the focused-input border treatment are not present in the captured surfaces.
-- **Authenticated chrome** (account dashboard, billing settings, team management) not in the captured pages.
+- **Light/dark dichotomy** — the system is single-mode by design. Existing `globals.css` defines `:root` and `.dark` tokens for the wider app, but the home page intentionally renders the same chrome in any mode.
+- **Reduced-motion** — Framer Motion respects `prefers-reduced-motion` by default; explicit alternate-state copy hasn't been authored for users who disable motion. The page degrades cleanly to a static layout.
+- **Empty-state copy** — only one empty state ("Aún no hay elecciones cerradas.") exists in the archive section. Future archive variants (filtered views, no-results-after-search) are not yet specified.
+- **Authenticated chrome** — this document covers the marketing home only. The voter/admin/urn surfaces are not described here.
+- **Localization** — copy is currently Spanish (es-MX). No English variant exists for the home page yet.
