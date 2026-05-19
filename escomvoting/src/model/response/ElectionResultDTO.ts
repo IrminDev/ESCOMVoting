@@ -3,4 +3,7 @@ export interface ElectionResultDTO {
   candidateName: string
   voteCount: number
   weightedScore: number
+  studentVotes: number
+  professorVotes: number
+  paaeVotes: number
 }

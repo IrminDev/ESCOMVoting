@@ -1,40 +1,65 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Vote, Calendar, ChevronRight, Clock, Lock, BarChart2, CheckCircle2, ShieldCheck } from 'lucide-react'
+import {
+  Vote,
+  Calendar,
+  ChevronRight,
+  Clock,
+  Lock,
+  BarChart2,
+  CheckCircle2,
+  ShieldCheck,
+  Users,
+  ArrowUpRight,
+  FileX,
+} from 'lucide-react'
 import { electionService } from '../../services/election.service'
 import { Pagination } from '../../components/shared/Pagination'
 import type { ElectionDTO } from '../../model/response/ElectionDTO'
 import type { PageResponse } from '../../model/response/PageResponse'
 
+// ── Design tokens (DESIGN.md v2.0 oceanic) ────────────────────────────────
+
+const NAVY         = '#050C9C'
+const BLUE         = '#3572EF'
+const CYAN         = '#3ABEF9'
+const ICE          = '#A7E6FF'
+const WHITE        = '#ffffff'
+const BODY         = '#3a4a6b'
+const MUTE         = '#6b7a99'
+const HAIRLINE     = 'rgba(58,190,249,0.27)'
+const ICE_SOFT     = 'rgba(167,230,255,0.33)'
+const CYAN_SOFT    = 'rgba(58,190,249,0.13)'
+const BLUE_SOFT    = 'rgba(53,114,239,0.13)'
+
 // ── Status config ──────────────────────────────────────────────────────────
 
-const STATUS_CONFIG = {
-  OPEN:    { label: 'Abierta',    color: 'var(--accent-green)',  bg: 'var(--accent-green-soft)',  icon: Vote },
-  CLOSED:  { label: 'Cerrada',    color: 'var(--accent-yellow)', bg: 'var(--accent-yellow-soft)', icon: Lock },
-  TALLIED: { label: 'Resultados', color: 'var(--accent-blue)',   bg: 'var(--accent-blue-soft)',   icon: BarChart2 },
-  DRAFT:   { label: 'Borrador',   color: 'var(--text-ash)',      bg: 'var(--surface-card)',        icon: Clock },
-} as const
+const STATUS: Record<string, { label: string; dot: string; bg: string; icon: React.ElementType }> = {
+  OPEN:    { label: 'En curso',    dot: CYAN, bg: CYAN_SOFT,  icon: Vote     },
+  CLOSED:  { label: 'Cerrada',     dot: CYAN, bg: ICE_SOFT,   icon: Lock     },
+  TALLIED: { label: 'Resultados',  dot: BLUE, bg: BLUE_SOFT,  icon: BarChart2 },
+  DRAFT:   { label: 'Borrador',    dot: MUTE, bg: ICE_SOFT,   icon: Clock    },
+}
 
-function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_CONFIG[status as keyof typeof STATUS_CONFIG] ?? STATUS_CONFIG.DRAFT
-  const Icon = cfg.icon
+function StatusPill({ status }: { status: string }) {
+  const cfg = STATUS[status] ?? STATUS.DRAFT
   return (
     <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium"
-      style={{ background: cfg.bg, color: cfg.color }}
+      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
+      style={{ background: cfg.bg, color: NAVY, letterSpacing: '0.03em' }}
     >
-      <Icon size={10} strokeWidth={2.5} />
+      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.dot }} />
       {cfg.label}
     </span>
   )
 }
 
-function Skeleton({ className }: { className?: string }) {
+function Skeleton() {
   return (
     <div
-      className={`rounded-xl animate-pulse ${className ?? ''}`}
-      style={{ background: 'var(--surface-elevated)' }}
+      className="rounded-2xl animate-pulse"
+      style={{ height: 208, background: ICE_SOFT, border: `1px solid rgba(58,190,249,0.13)` }}
     />
   )
 }
@@ -56,58 +81,53 @@ function ElectionCard({
   index: number
   hasVoted: boolean
 }) {
-  const isOpen    = election.status === 'OPEN'
-  const isTallied = election.status === 'TALLIED'
-  const canInteract = isOpen || isTallied
+  const isOpen     = election.status === 'OPEN'
+  const isTallied  = election.status === 'TALLIED'
+  const isFinished = election.status === 'CLOSED' || isTallied
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.07 }}
-      className="rounded-xl p-5 flex flex-col gap-4"
-      style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+      transition={{ duration: 0.4, delay: index * 0.08 }}
+      whileHover={{ y: -2 }}
+      className="group rounded-2xl p-7 flex flex-col gap-5 transition-shadow duration-200"
+      style={{
+        background: WHITE,
+        border: `1px solid ${HAIRLINE}`,
+      }}
     >
-      {/* Header */}
+      {/* Top row: status + voted badge */}
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <h2
-            className="text-base font-semibold tracking-tight leading-snug"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            {election.title}
-          </h2>
-          <p
-            className="text-sm mt-1 line-clamp-2"
-            style={{ color: 'var(--text-mute)' }}
-          >
-            {election.description}
-          </p>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <StatusPill status={election.status} />
+        <div className="flex items-center gap-1.5">
           {hasVoted && isOpen && (
             <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium"
-              style={{ background: 'var(--accent-green-soft)', color: 'var(--accent-green)' }}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
+              style={{ background: CYAN_SOFT, color: NAVY }}
             >
-              <CheckCircle2 size={10} strokeWidth={2.5} />
+              <CheckCircle2 size={11} strokeWidth={2.5} />
               Votado
             </span>
           )}
-          <StatusBadge status={election.status} />
+          <Users size={18} strokeWidth={1.5} style={{ color: MUTE }} />
         </div>
       </div>
 
-      {/* Meta */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-        <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-ash)' }}>
-          <Calendar size={11} strokeWidth={2} />
-          Cierra {formatDate(election.endDate)}
-        </span>
-        <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-ash)' }}>
-          <Vote size={11} strokeWidth={2} />
-          {election.candidates.length} candidato{election.candidates.length !== 1 ? 's' : ''}
-        </span>
+      {/* Title + description */}
+      <div className="flex-1">
+        <h2
+          className="text-xl font-semibold leading-snug line-clamp-2"
+          style={{ color: NAVY, letterSpacing: '-0.02em' }}
+        >
+          {election.title}
+        </h2>
+        <p
+          className="text-sm mt-2 line-clamp-2 leading-relaxed"
+          style={{ color: BODY }}
+        >
+          {election.description}
+        </p>
       </div>
 
       {/* Candidates preview */}
@@ -116,70 +136,89 @@ function ElectionCard({
           {election.candidates.slice(0, 3).map((c) => (
             <span
               key={c.id}
-              className="text-xs px-2 py-0.5 rounded-md font-medium"
-              style={{ background: 'var(--surface-elevated)', color: 'var(--text-body)', border: '1px solid var(--hairline)' }}
+              className="text-xs px-2.5 py-1 rounded-full"
+              style={{ background: ICE_SOFT, color: BODY, border: `1px solid ${HAIRLINE}` }}
             >
               {c.name}
             </span>
           ))}
           {election.candidates.length > 3 && (
-            <span className="text-xs px-2 py-0.5 rounded-md" style={{ color: 'var(--text-ash)' }}>
+            <span
+              className="text-xs px-2.5 py-1 rounded-full"
+              style={{ background: ICE_SOFT, color: MUTE }}
+            >
               +{election.candidates.length - 3} más
             </span>
           )}
         </div>
       )}
 
-      {/* CTA */}
-      {canInteract && (
-        <div className="pt-1 flex flex-wrap items-center gap-2">
-          {isOpen && hasVoted ? (
-            <p className="text-sm" style={{ color: 'var(--text-ash)' }}>
-              Ya has votado en esta elección.
-            </p>
-          ) : (
-            <Link
-              to={`/elections/${election.id}`}
-              className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-150"
-              style={{
-                background: isOpen ? 'var(--cta-bg)' : 'var(--surface-elevated)',
-                color: isOpen ? 'var(--cta-fg)' : 'var(--text-body)',
-                border: isOpen ? 'none' : '1px solid var(--hairline)',
-                textDecoration: 'none',
-              }}
-              onMouseEnter={(e) => {
-                if (isOpen) e.currentTarget.style.background = 'var(--cta-bg-hover)'
-              }}
-              onMouseLeave={(e) => {
-                if (isOpen) e.currentTarget.style.background = isOpen ? 'var(--cta-bg)' : 'var(--surface-elevated)'
-              }}
-            >
-              {isOpen ? 'Votar ahora' : 'Ver resultados'}
-              <ChevronRight size={14} strokeWidth={2.5} />
-            </Link>
-          )}
+      {/* Footer: date + CTA */}
+      <div className="flex items-center justify-between gap-3 pt-1 border-t" style={{ borderColor: HAIRLINE }}>
+        <span className="flex items-center gap-1.5 text-xs" style={{ color: MUTE }}>
+          <Calendar size={13} strokeWidth={1.75} />
+          {formatDate(election.endDate)}
+        </span>
 
-          {/* Urn link — only for finished elections */}
-          {(election.status === 'CLOSED' || election.status === 'TALLIED') && (
-            <Link
-              to={`/elections/${election.id}/urn`}
-              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg transition-colors"
-              style={{
-                background: 'var(--surface-elevated)',
-                color: 'var(--text-mute)',
-                border: '1px solid var(--hairline)',
-                textDecoration: 'none',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-mute)' }}
-            >
-              <ShieldCheck size={12} strokeWidth={2} />
-              Ver urna
-            </Link>
-          )}
-        </div>
-      )}
+        {isOpen && hasVoted ? (
+          <span className="flex items-center gap-1.5 text-xs font-medium" style={{ color: CYAN }}>
+            <CheckCircle2 size={12} strokeWidth={2.5} />
+            Ya votaste
+          </span>
+        ) : isOpen ? (
+          <Link
+            to={`/elections/${election.id}`}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all duration-150"
+            style={{ background: NAVY, color: WHITE, textDecoration: 'none' }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+          >
+            <Vote size={11} strokeWidth={2.5} />
+            Votar ahora
+          </Link>
+        ) : isTallied ? (
+          <Link
+            to={`/elections/${election.id}`}
+            className="group/link inline-flex items-center gap-1.5 text-xs font-semibold transition-all duration-150"
+            style={{ color: BLUE, textDecoration: 'none' }}
+          >
+            Ver resultados
+            <ArrowUpRight
+              size={13}
+              strokeWidth={2}
+              className="transition-transform duration-150 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
+            />
+          </Link>
+        ) : isFinished ? (
+          <Link
+            to={`/elections/${election.id}/urn`}
+            className="group/link inline-flex items-center gap-1.5 text-xs font-semibold transition-all duration-150"
+            style={{ color: BLUE, textDecoration: 'none' }}
+          >
+            <ShieldCheck size={12} strokeWidth={2} />
+            Ver urna
+            <ArrowUpRight
+              size={13}
+              strokeWidth={2}
+              className="transition-transform duration-150 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
+            />
+          </Link>
+        ) : null}
+      </div>
     </motion.div>
+  )
+}
+
+// ── Section eyebrow ────────────────────────────────────────────────────────
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <p
+      className="text-xs font-semibold uppercase"
+      style={{ color: BLUE, letterSpacing: '0.18em' }}
+    >
+      {children}
+    </p>
   )
 }
 
@@ -213,53 +252,54 @@ export function ElectionsListPage() {
   const other = elections.filter((e) => e.status !== 'OPEN')
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-3xl mx-auto space-y-10">
       {/* Header */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <Eyebrow>Portal de votación</Eyebrow>
         <h1
-          className="text-2xl font-semibold tracking-tight"
-          style={{ color: 'var(--text-primary)' }}
+          className="text-4xl font-semibold mt-2"
+          style={{ color: NAVY, letterSpacing: '-0.03em', lineHeight: 1.05 }}
         >
           Elecciones
         </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-mute)' }}>
+        <p className="text-sm mt-2" style={{ color: MUTE }}>
           {loading
-            ? 'Cargando…'
+            ? 'Cargando elecciones…'
             : elections.length === 0
               ? 'No hay elecciones disponibles.'
               : `${open.length} elección${open.length !== 1 ? 'es' : ''} abierta${open.length !== 1 ? 's' : ''}`}
+          {!loading && data && data.totalElements > 0 && (
+            <span> · {data.totalElements} en total</span>
+          )}
         </p>
-        {data && data.totalElements > 0 && (
-          <p className="text-xs mt-0.5" style={{ color: 'var(--text-ash)' }}>
-            {data.totalElements} en total
-          </p>
-        )}
-      </div>
+      </motion.div>
 
       {/* Error */}
       {error && (
-        <p
-          className="text-sm px-4 py-3 rounded-lg"
-          style={{ background: 'var(--accent-red-soft)', color: 'var(--accent-red)' }}
+        <div
+          className="px-4 py-3 rounded-xl text-sm"
+          style={{ background: '#fee', color: '#c00' }}
         >
           {error}
-        </p>
+        </div>
       )}
 
       {/* Loading skeletons */}
       {loading && (
         <div className="space-y-4">
-          {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-44" />)}
+          {[...Array(3)].map((_, i) => <Skeleton key={i} />)}
         </div>
       )}
 
       {/* Open elections */}
       {!loading && open.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-ash)' }}>
-            Disponibles para votar
-          </h2>
-          <div className="space-y-3">
+        <section className="space-y-4">
+          <Eyebrow>Disponibles para votar</Eyebrow>
+          <div className="space-y-4">
             {open.map((e, i) => (
               <ElectionCard key={e.id} election={e} index={i} hasVoted={votedIds.has(e.id)} />
             ))}
@@ -269,11 +309,9 @@ export function ElectionsListPage() {
 
       {/* Other elections */}
       {!loading && other.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-ash)' }}>
-            Otras elecciones
-          </h2>
-          <div className="space-y-3">
+        <section className="space-y-4">
+          <Eyebrow>Otras elecciones</Eyebrow>
+          <div className="space-y-4">
             {other.map((e, i) => (
               <ElectionCard key={e.id} election={e} index={i} hasVoted={votedIds.has(e.id)} />
             ))}
@@ -294,18 +332,26 @@ export function ElectionsListPage() {
 
       {/* Empty state */}
       {!loading && elections.length === 0 && !error && (
-        <div
-          className="rounded-xl p-12 text-center"
-          style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="rounded-2xl p-16 text-center"
+          style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
         >
-          <Vote size={28} strokeWidth={1.5} className="mx-auto mb-3" style={{ color: 'var(--text-ash)' }} />
-          <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-            Sin elecciones activas
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+            style={{ background: ICE_SOFT }}
+          >
+            <FileX size={24} strokeWidth={1.5} style={{ color: MUTE }} />
+          </div>
+          <p className="text-base font-semibold" style={{ color: NAVY }}>
+            Aún no hay elecciones activas
           </p>
-          <p className="text-xs mt-1" style={{ color: 'var(--text-ash)' }}>
+          <p className="text-sm mt-1.5" style={{ color: MUTE }}>
             Cuando una elección esté abierta aparecerá aquí.
           </p>
-        </div>
+        </motion.div>
       )}
     </div>
   )

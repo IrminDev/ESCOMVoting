@@ -31,6 +31,7 @@ public class AdminBootstrapConfig {
             admin.setRole(UserRole.PAAE);
             admin.setPasswordHash(passwordEncoder.encode(adminPassword));
             admin.setActive(true);
+            admin.setAdmin(true);
             userRepository.save(admin);
         };
     }

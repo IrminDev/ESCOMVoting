@@ -1,7 +1,6 @@
 package com.github.escom.escomvoting.config;
 
 import com.github.escom.escomvoting.model.entity.User;
-import com.github.escom.escomvoting.model.entity.UserRole;
 import com.github.escom.escomvoting.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -49,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (user != null && user.isActive()) {
                     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
-                    if (user.getRole() == UserRole.PAAE) {
+                    if (user.isAdmin()) {
                         authorities.add(new SimpleGrantedAuthority("SCOPE_ADMIN"));
                     }
                     var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);

@@ -10,35 +10,35 @@ import {
   Shield,
   Menu,
   X,
-  Sun,
-  Moon,
+  Sparkles,
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTheme } from '../../contexts/ThemeContext'
 import { cn } from '../../lib/utils'
+
+// ── Oceanic palette (DESIGN.md v2.0) ───────────────────────────────────────
+
+const NAVY = '#050C9C'
+const CYAN = '#3ABEF9'
+const ICE = '#A7E6FF'
+const WHITE = '#ffffff'
+const MUTE = '#6b7a99'
+const HAIRLINE_CYAN = 'rgba(58,190,249,0.27)'
+const HAIRLINE_ICE = 'rgba(167,230,255,0.27)'
+const SIDEBAR_GRADIENT =
+  'linear-gradient(180deg, #050C9C 0%, #0a1ab3 60%, #040A7A 100%)'
+const ACTIVE_BG = 'rgba(255,255,255,0.10)'
+const ACTIVE_BG_HOVER = 'rgba(167,230,255,0.07)'
 
 // ── Nav items ──────────────────────────────────────────────────────────────
 
 const navItems = [
-  { to: '/admin',              label: 'Dashboard',   icon: LayoutDashboard, end: true },
-  { to: '/admin/elections',    label: 'Elecciones',  icon: Vote },
-  { to: '/admin/users',        label: 'Usuarios',    icon: Users },
-  { to: '/admin/users/import', label: 'Importar',    icon: Upload },
+  { to: '/admin',              label: 'Dashboard',  icon: LayoutDashboard, end: true },
+  { to: '/admin/elections',    label: 'Elecciones', icon: Vote },
+  { to: '/admin/users',        label: 'Usuarios',   icon: Users },
+  { to: '/admin/users/import', label: 'Importar',   icon: Upload },
 ]
 
 const voterLink = { to: '/elections', label: 'Mis votos', icon: Vote }
-
-// ── Shared styles ──────────────────────────────────────────────────────────
-
-const inputStyle: React.CSSProperties = {
-  background: 'var(--surface-elevated)',
-  border: '1px solid var(--hairline)',
-  borderRadius: '8px',
-  color: 'var(--text-primary)',
-}
-
-// Exported so page components can reuse it
-export { inputStyle }
 
 // ── Sidebar link ───────────────────────────────────────────────────────────
 
@@ -46,7 +46,7 @@ function SideLink({
   item,
   onClick,
 }: {
-  item: (typeof navItems)[number]
+  item: { to: string; label: string; icon: React.ElementType; end?: boolean }
   onClick?: () => void
 }) {
   const Icon = item.icon
@@ -57,14 +57,29 @@ function SideLink({
       onClick={onClick}
       className={({ isActive }) =>
         cn(
-          'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150',
-          isActive
-            ? 'text-[var(--text-primary)] bg-[var(--surface-elevated)]'
-            : 'text-[var(--text-mute)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)]',
+          'group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 relative',
+          isActive ? 'font-semibold' : '',
         )
       }
+      style={({ isActive }) => ({
+        color: isActive ? WHITE : 'rgba(167,230,255,0.85)',
+        background: isActive ? ACTIVE_BG : 'transparent',
+        border: `1px solid ${isActive ? HAIRLINE_ICE : 'transparent'}`,
+      })}
+      onMouseEnter={(e) => {
+        if (!e.currentTarget.classList.contains('font-semibold')) {
+          e.currentTarget.style.background = ACTIVE_BG_HOVER
+          e.currentTarget.style.color = WHITE
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!e.currentTarget.classList.contains('font-semibold')) {
+          e.currentTarget.style.background = 'transparent'
+          e.currentTarget.style.color = 'rgba(167,230,255,0.85)'
+        }
+      }}
     >
-      <Icon size={15} strokeWidth={2} />
+      <Icon size={16} strokeWidth={2} />
       {item.label}
     </NavLink>
   )
@@ -74,7 +89,6 @@ function SideLink({
 
 export function AdminLayout() {
   const { session, logout } = useAuth()
-  const { isDark, toggle } = useTheme()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -85,35 +99,72 @@ export function AdminLayout() {
 
   const sidebarContent = (
     <div
-      className="flex flex-col h-full"
-      style={{ background: 'var(--surface)', borderRight: '1px solid var(--hairline)' }}
+      className="flex flex-col h-full relative overflow-hidden"
+      style={{ background: SIDEBAR_GRADIENT }}
     >
+      {/* Ambient orb */}
+      <div
+        aria-hidden
+        className="absolute pointer-events-none"
+        style={{
+          top: '-20%',
+          left: '-30%',
+          width: '24rem',
+          height: '24rem',
+          background:
+            'radial-gradient(circle, rgba(58,190,249,0.35) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+      <div
+        aria-hidden
+        className="absolute pointer-events-none"
+        style={{
+          bottom: '-10%',
+          right: '-30%',
+          width: '20rem',
+          height: '20rem',
+          background:
+            'radial-gradient(circle, rgba(167,230,255,0.18) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+
       {/* Logo */}
       <div
-        className="flex items-center gap-2 px-4 h-14 shrink-0"
-        style={{ borderBottom: '1px solid var(--hairline)' }}
+        className="relative flex items-center gap-2 px-5 h-16 shrink-0"
+        style={{ borderBottom: `1px solid ${HAIRLINE_ICE}` }}
       >
-        <Shield size={18} style={{ color: 'var(--accent-red)' }} strokeWidth={2} />
+        <Shield size={20} style={{ color: ICE }} strokeWidth={2} />
         <span
           className="text-sm font-semibold tracking-tight"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: WHITE }}
         >
           ESCOMVoting
         </span>
         <span
-          className="ml-auto text-xs font-medium px-1.5 py-0.5 rounded-md"
+          className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full"
           style={{
-            background: 'var(--accent-red-soft)',
-            color: 'var(--accent-red)',
+            background: 'rgba(167,230,255,0.12)',
+            color: ICE,
+            border: `1px solid ${HAIRLINE_ICE}`,
+            letterSpacing: '0.1em',
           }}
         >
-          Admin
+          <Sparkles size={9} strokeWidth={2.5} />
+          PAAE
         </span>
       </div>
 
-      {/* Nav links */}
-      <nav className="flex-1 px-3 py-4 overflow-y-auto">
-        <div className="space-y-0.5">
+      {/* Nav */}
+      <nav className="relative flex-1 px-3 py-5 overflow-y-auto">
+        <p
+          className="px-3 pb-2 text-[10px] font-semibold uppercase"
+          style={{ color: 'rgba(167,230,255,0.55)', letterSpacing: '0.18em' }}
+        >
+          Administración
+        </p>
+        <div className="space-y-1">
           {navItems.map((item) => (
             <SideLink
               key={item.to}
@@ -123,71 +174,75 @@ export function AdminLayout() {
           ))}
         </div>
 
-        {/* Voter section divider */}
-        <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--hairline)' }}>
-          <p className="px-3 pb-1.5 text-xs font-medium uppercase tracking-widest" style={{ color: 'var(--text-ash)' }}>
+        <div
+          className="mt-5 pt-5"
+          style={{ borderTop: `1px solid ${HAIRLINE_ICE}` }}
+        >
+          <p
+            className="px-3 pb-2 text-[10px] font-semibold uppercase"
+            style={{ color: 'rgba(167,230,255,0.55)', letterSpacing: '0.18em' }}
+          >
             Votación
           </p>
           <SideLink item={voterLink} onClick={() => setSidebarOpen(false)} />
         </div>
       </nav>
 
-      {/* Bottom: user info + actions */}
+      {/* Bottom */}
       <div
-        className="px-3 py-4 space-y-1 shrink-0"
-        style={{ borderTop: '1px solid var(--hairline)' }}
+        className="relative px-3 py-4 space-y-2 shrink-0"
+        style={{ borderTop: `1px solid ${HAIRLINE_ICE}` }}
       >
-        {/* User row */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg">
+        <div
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg"
+          style={{
+            background: 'rgba(167,230,255,0.07)',
+            border: `1px solid ${HAIRLINE_ICE}`,
+          }}
+        >
           <div
-            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-            style={{ background: 'var(--accent-blue-soft)', color: 'var(--accent-blue)' }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-semibold shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, #3572EF 0%, #3ABEF9 100%)',
+              color: NAVY,
+            }}
           >
             {session?.name.charAt(0).toUpperCase() ?? 'A'}
           </div>
           <div className="min-w-0">
             <p
-              className="text-xs font-medium truncate"
-              style={{ color: 'var(--text-primary)' }}
+              className="text-xs font-semibold truncate"
+              style={{ color: WHITE }}
             >
               {session?.name ?? 'Administrador'}
             </p>
-            <p className="text-xs" style={{ color: 'var(--text-ash)' }}>
-              {session?.role}
+            <p
+              className="text-[10px] uppercase mt-0.5"
+              style={{ color: ICE, letterSpacing: '0.15em' }}
+            >
+              {session?.role ?? 'PAAE'}
             </p>
           </div>
         </div>
 
-        {/* Theme toggle */}
-        <button
-          onClick={toggle}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150"
-          style={{ color: 'var(--text-mute)', background: 'transparent', border: 'none', cursor: 'pointer' }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'var(--text-primary)'
-            e.currentTarget.style.background = 'var(--surface-elevated)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'var(--text-mute)'
-            e.currentTarget.style.background = 'transparent'
-          }}
-        >
-          {isDark ? <Sun size={15} strokeWidth={2} /> : <Moon size={15} strokeWidth={2} />}
-          {isDark ? 'Modo claro' : 'Modo oscuro'}
-        </button>
-
-        {/* Logout */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150"
-          style={{ color: 'var(--text-mute)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150"
+          style={{
+            color: 'rgba(167,230,255,0.85)',
+            background: 'transparent',
+            border: '1px solid transparent',
+            cursor: 'pointer',
+          }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'var(--accent-red)'
-            e.currentTarget.style.background = 'var(--accent-red-soft)'
+            e.currentTarget.style.background = 'rgba(255,255,255,0.10)'
+            e.currentTarget.style.borderColor = HAIRLINE_ICE
+            e.currentTarget.style.color = WHITE
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'var(--text-mute)'
             e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.borderColor = 'transparent'
+            e.currentTarget.style.color = 'rgba(167,230,255,0.85)'
           }}
         >
           <LogOut size={15} strokeWidth={2} />
@@ -198,16 +253,13 @@ export function AdminLayout() {
   )
 
   return (
-    <div
-      className="flex min-h-screen"
-      style={{ background: 'var(--canvas)' }}
-    >
+    <div className="flex min-h-screen" style={{ background: WHITE }}>
       {/* Desktop sidebar */}
-      <aside className="hidden md:block w-60 shrink-0 sticky top-0 h-screen">
+      <aside className="hidden md:block w-64 shrink-0 sticky top-0 h-screen">
         {sidebarContent}
       </aside>
 
-      {/* Mobile sidebar overlay */}
+      {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
           <>
@@ -218,16 +270,16 @@ export function AdminLayout() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-40 md:hidden"
-              style={{ background: 'rgba(0,0,0,0.5)' }}
+              style={{ background: 'rgba(5,12,156,0.55)', backdropFilter: 'blur(4px)' }}
               onClick={() => setSidebarOpen(false)}
             />
             <motion.aside
               key="sidebar"
-              initial={{ x: -240 }}
+              initial={{ x: -260 }}
               animate={{ x: 0 }}
-              exit={{ x: -240 }}
+              exit={{ x: -260 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="fixed top-0 left-0 bottom-0 w-60 z-50 md:hidden"
+              className="fixed top-0 left-0 bottom-0 w-64 z-50 md:hidden"
             >
               {sidebarContent}
             </motion.aside>
@@ -235,31 +287,54 @@ export function AdminLayout() {
         )}
       </AnimatePresence>
 
-      {/* Main content */}
+      {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
         <header
-          className="md:hidden h-14 flex items-center gap-3 px-4 shrink-0 sticky top-0 z-30"
+          className="md:hidden h-16 flex items-center gap-3 px-5 shrink-0 sticky top-0 z-30"
           style={{
-            background: 'var(--surface)',
-            borderBottom: '1px solid var(--hairline)',
+            background: WHITE,
+            borderBottom: `1px solid ${HAIRLINE_CYAN}`,
           }}
         >
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-1.5 rounded-md"
-            style={{ color: 'var(--text-mute)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+            className="p-2 rounded-lg transition-colors"
+            style={{
+              color: NAVY,
+              background: 'transparent',
+              border: `1px solid ${HAIRLINE_CYAN}`,
+              cursor: 'pointer',
+            }}
+            aria-label="Abrir menú"
           >
-            {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+            {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
           </button>
-          <Shield size={16} style={{ color: 'var(--accent-red)' }} />
-          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+          <Shield size={18} style={{ color: NAVY }} />
+          <span
+            className="text-sm font-semibold tracking-tight"
+            style={{ color: NAVY }}
+          >
             ESCOMVoting
+          </span>
+          <span
+            className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full"
+            style={{
+              background: 'rgba(58,190,249,0.13)',
+              color: NAVY,
+              letterSpacing: '0.1em',
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: CYAN }}
+            />
+            PAAE
           </span>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6 md:p-8">
+        <main className="flex-1 p-6 md:p-10 max-w-7xl w-full mx-auto">
           <Outlet />
         </main>
       </div>

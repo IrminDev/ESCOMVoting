@@ -78,6 +78,6 @@ public class UrnController {
                 .map(CandidateDTO::from)
                 .toList();
 
-        return new UrnResponse(election.getId(), election.getTitle(), candidates, PageResponse.from(ballotPage));
+        return new UrnResponse(election.getId(), election.getTitle(), election.getStatus().name(), candidates, PageResponse.from(ballotPage));
     }
 }

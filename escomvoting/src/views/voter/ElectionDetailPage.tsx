@@ -6,12 +6,15 @@ import {
   Calendar,
   Users,
   CheckCircle2,
-  Circle,
   Loader2,
   AlertCircle,
   ShieldCheck,
   Vote,
   ArrowLeft,
+  Lock,
+  KeyRound,
+  Fingerprint,
+  ArrowRight,
 } from 'lucide-react'
 import { electionService } from '../../services/election.service'
 import { ballotService } from '../../services/ballot.service'
@@ -21,6 +24,21 @@ import type { ElectionDTO } from '../../model/response/ElectionDTO'
 import type { CandidateDTO } from '../../model/response/CandidateDTO'
 import type { VoteRequest } from '../../model/request/VoteRequest'
 
+// ── Design tokens (DESIGN.md v2.0 oceanic) ────────────────────────────────
+
+const NAVY         = '#050C9C'
+const BLUE         = '#3572EF'
+const CYAN         = '#3ABEF9'
+const ICE          = '#A7E6FF'
+const WHITE        = '#ffffff'
+const BODY         = '#3a4a6b'
+const MUTE         = '#6b7a99'
+const HAIRLINE     = 'rgba(58,190,249,0.27)'
+const ICE_SOFT     = 'rgba(167,230,255,0.33)'
+const CYAN_SOFT    = 'rgba(58,190,249,0.13)'
+const BLUE_SOFT    = 'rgba(53,114,239,0.13)'
+const STEP_BUBBLE  = 'linear-gradient(135deg, #050C9C 0%, #3572EF 100%)'
+
 // ── Types ──────────────────────────────────────────────────────────────────
 
 type Phase = 'loading' | 'error-load' | 'select' | 'confirm' | 'processing' | 'done' | 'error-vote'
@@ -28,14 +46,15 @@ type Phase = 'loading' | 'error-load' | 'select' | 'confirm' | 'processing' | 'd
 interface ProcessStep {
   label: string
   status: 'pending' | 'running' | 'done' | 'error'
+  icon: React.ElementType
 }
 
 const INITIAL_STEPS: ProcessStep[] = [
-  { label: 'Solicitando punto de compromiso al servidor',  status: 'pending' },
-  { label: 'Generando token criptográfico anónimo',        status: 'pending' },
-  { label: 'Firmando token con el servidor',               status: 'pending' },
-  { label: 'Finalizando firma anónima',                    status: 'pending' },
-  { label: 'Enviando voto (sin identidad)',                 status: 'pending' },
+  { label: 'Solicitando punto de compromiso al servidor',  status: 'pending', icon: ArrowRight  },
+  { label: 'Generando token criptográfico anónimo',        status: 'pending', icon: KeyRound    },
+  { label: 'Firmando token con el servidor',               status: 'pending', icon: ShieldCheck },
+  { label: 'Finalizando firma anónima',                    status: 'pending', icon: Fingerprint },
+  { label: 'Enviando voto (sin identidad)',                 status: 'pending', icon: Vote        },
 ]
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -54,37 +73,57 @@ const ROLE_LABEL: Record<string, string> = {
 
 // ── Sub-components ─────────────────────────────────────────────────────────
 
-function StepRow({ step }: { step: ProcessStep }) {
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="w-5 shrink-0 flex justify-center">
-        {step.status === 'done' && (
-          <CheckCircle2 size={16} strokeWidth={2} style={{ color: 'var(--accent-green)' }} />
-        )}
-        {step.status === 'running' && (
-          <Loader2 size={16} strokeWidth={2} className="animate-spin" style={{ color: 'var(--accent-blue)' }} />
-        )}
-        {step.status === 'error' && (
-          <AlertCircle size={16} strokeWidth={2} style={{ color: 'var(--accent-red)' }} />
-        )}
-        {step.status === 'pending' && (
-          <Circle size={16} strokeWidth={1.5} style={{ color: 'var(--text-ash)' }} />
-        )}
-      </div>
-      <span
-        className="text-sm"
+    <p className="text-xs font-semibold uppercase" style={{ color: BLUE, letterSpacing: '0.18em' }}>
+      {children}
+    </p>
+  )
+}
+
+function StepRow({ step, index }: { step: ProcessStep; index: number }) {
+  const StepIcon = step.icon
+  const isDone    = step.status === 'done'
+  const isRunning = step.status === 'running'
+  const isError   = step.status === 'error'
+  const isPending = step.status === 'pending'
+
+  return (
+    <div className="flex items-center gap-4">
+      {/* Bubble */}
+      <div
+        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-sm"
         style={{
-          color: step.status === 'done'
-            ? 'var(--accent-green)'
-            : step.status === 'running'
-              ? 'var(--text-primary)'
-              : step.status === 'error'
-                ? 'var(--accent-red)'
-                : 'var(--text-ash)',
+          background: isDone    ? CYAN_SOFT  :
+                      isRunning ? STEP_BUBBLE :
+                      isError   ? '#fee'      :
+                                  ICE_SOFT,
         }}
       >
-        {step.label}
-      </span>
+        {isDone && <CheckCircle2 size={16} strokeWidth={2.5} style={{ color: CYAN }} />}
+        {isRunning && <Loader2 size={16} strokeWidth={2.5} className="animate-spin" style={{ color: WHITE }} />}
+        {isError && <AlertCircle size={16} strokeWidth={2.5} style={{ color: '#c00' }} />}
+        {isPending && <StepIcon size={15} strokeWidth={1.75} style={{ color: MUTE }} />}
+      </div>
+
+      {/* Label */}
+      <div>
+        <p
+          className="text-sm"
+          style={{
+            color: isDone    ? NAVY  :
+                   isRunning ? NAVY  :
+                   isError   ? '#c00' :
+                               MUTE,
+            fontWeight: isRunning ? 600 : 400,
+          }}
+        >
+          {step.label}
+        </p>
+        {isRunning && (
+          <p className="text-xs mt-0.5" style={{ color: BLUE }}>Procesando…</p>
+        )}
+      </div>
     </div>
   )
 }
@@ -102,26 +141,33 @@ function CandidateCard({
     <button
       type="button"
       onClick={onSelect}
-      className="w-full text-left rounded-xl p-5 transition-all duration-150"
+      className="w-full text-left rounded-2xl p-5 transition-all duration-150"
       style={{
-        background: selected ? 'var(--accent-blue-soft)' : 'var(--surface)',
-        border: `2px solid ${selected ? 'var(--accent-blue)' : 'var(--hairline)'}`,
+        background: selected ? BLUE_SOFT : WHITE,
+        border: `2px solid ${selected ? BLUE : HAIRLINE}`,
         cursor: 'pointer',
+        boxShadow: selected ? `0 0 0 3px ${BLUE_SOFT}` : 'none',
       }}
       onMouseEnter={(e) => {
-        if (!selected) e.currentTarget.style.borderColor = 'var(--hairline-strong)'
+        if (!selected) {
+          e.currentTarget.style.borderColor = `rgba(58,190,249,0.55)`
+          e.currentTarget.style.background = ICE_SOFT
+        }
       }}
       onMouseLeave={(e) => {
-        if (!selected) e.currentTarget.style.borderColor = 'var(--hairline)'
+        if (!selected) {
+          e.currentTarget.style.borderColor = HAIRLINE
+          e.currentTarget.style.background = WHITE
+        }
       }}
     >
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold shrink-0"
           style={{
-            background: selected ? 'var(--accent-blue)' : 'var(--surface-elevated)',
-            color: selected ? '#fff' : 'var(--text-mute)',
+            background: selected ? STEP_BUBBLE : ICE_SOFT,
+            color: selected ? WHITE : NAVY,
           }}
         >
           {candidate.name.charAt(0).toUpperCase()}
@@ -129,32 +175,49 @@ function CandidateCard({
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <p
-            className="text-sm font-semibold"
-            style={{ color: 'var(--text-primary)' }}
-          >
+          <p className="text-sm font-semibold" style={{ color: NAVY, letterSpacing: '-0.01em' }}>
             {candidate.name}
           </p>
           {candidate.description && (
-            <p
-              className="text-xs mt-1 leading-relaxed"
-              style={{ color: 'var(--text-mute)' }}
-            >
+            <p className="text-xs mt-0.5 leading-relaxed" style={{ color: BODY }}>
               {candidate.description}
             </p>
           )}
         </div>
 
-        {/* Selection indicator */}
-        <div className="shrink-0 mt-0.5">
-          {selected ? (
-            <CheckCircle2 size={18} strokeWidth={2} style={{ color: 'var(--accent-blue)' }} />
-          ) : (
-            <Circle size={18} strokeWidth={1.5} style={{ color: 'var(--hairline-strong)' }} />
-          )}
+        {/* Radio indicator */}
+        <div
+          className="w-5 h-5 rounded-full shrink-0 flex items-center justify-center border-2 transition-all duration-150 mt-0.5"
+          style={{
+            borderColor: selected ? BLUE : `rgba(58,190,249,0.4)`,
+            background: selected ? BLUE : 'transparent',
+          }}
+        >
+          {selected && <div className="w-2 h-2 rounded-full" style={{ background: WHITE }} />}
         </div>
       </div>
     </button>
+  )
+}
+
+// ── Loading skeleton ───────────────────────────────────────────────────────
+
+function LoadingSkeleton() {
+  return (
+    <div className="max-w-2xl mx-auto space-y-6 animate-pulse">
+      <div className="h-4 w-32 rounded-full" style={{ background: ICE_SOFT }} />
+      <div
+        className="rounded-2xl p-7 space-y-5"
+        style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
+      >
+        <div className="h-8 w-2/3 rounded-xl" style={{ background: ICE_SOFT }} />
+        <div className="h-4 w-full rounded-lg" style={{ background: ICE_SOFT }} />
+        <div className="h-4 w-3/4 rounded-lg" style={{ background: ICE_SOFT }} />
+      </div>
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="h-20 rounded-2xl" style={{ background: ICE_SOFT, border: `1px solid rgba(58,190,249,0.13)` }} />
+      ))}
+    </div>
   )
 }
 
@@ -172,7 +235,6 @@ export function ElectionDetailPage() {
   const [voteError, setVoteError] = useState<string | null>(null)
   const [alreadyVoted, setAlreadyVoted] = useState(false)
 
-  // Load election + check if already voted
   useEffect(() => {
     if (!id) return
     Promise.all([
@@ -197,21 +259,17 @@ export function ElectionDetailPage() {
       })
   }, [id])
 
-  // ── Process steps helper ─────────────────────────────────────────────────
-
   function setStep(index: number, status: ProcessStep['status']) {
     setSteps((prev) =>
       prev.map((s, i) => (i === index ? { ...s, status } : s)),
     )
   }
 
-  // ── Run full blind-signature voting flow ─────────────────────────────────
-
   async function runVoteFlow() {
     if (!election || !selected || !session) return
 
-    const voterGroup = session.role  // STUDENT | PROFESSOR
-    const publicKey = election.publicKeys[voterGroup]
+    const voterGroup = session.role
+    const publicKey  = election.publicKeys[voterGroup]
 
     if (!publicKey) {
       setVoteError(`Tu grupo (${voterGroup}) no está habilitado para esta elección.`)
@@ -223,48 +281,40 @@ export function ElectionDetailPage() {
     setSteps(INITIAL_STEPS.map((s) => ({ ...s, status: 'pending' as const })))
 
     try {
-      // ── Step 1: Request R point ─────────────────────────────────────────
       setStep(0, 'running')
       const { rPoint } = await ballotService.requestToken(election.id)
       setStep(0, 'done')
 
-      // ── Step 2: Blind (client-side) ─────────────────────────────────────
       setStep(1, 'running')
       const blinding = blind(rPoint, publicKey, election.id, selected.id, voterGroup)
       setStep(1, 'done')
 
-      // ── Step 3: Sign blinded challenge ──────────────────────────────────
       setStep(2, 'running')
       const c = bigIntToHex64(blinding.c)
-      const { sResponse } = await ballotService.signToken(election.id, {
-        blindedChallenge: c,
-      })
+      const { sResponse } = await ballotService.signToken(election.id, { blindedChallenge: c })
       setStep(2, 'done')
 
-      // ── Step 4: Unblind + compute nullifier (client-side) ───────────────
       setStep(3, 'running')
-      const sPrime = unblind(sResponse, blinding.alpha)
+      const sPrime   = unblind(sResponse, blinding.alpha)
       const nullifier = computeNullifier(blinding.alpha, blinding.beta, election.id)
       setStep(3, 'done')
 
-      // ── Step 5: Submit anonymous ballot ────────────────────────────────
       setStep(4, 'running')
       const requestVote = {
         candidateId: selected.id,
         voterGroup,
         nullifier,
-        rPrime:  blinding.rPrime,
-        sPrime:  bigIntToHex64(sPrime),
-        ePrime:  bigIntToHex64(blinding.ePrime),
+        rPrime: blinding.rPrime,
+        sPrime: bigIntToHex64(sPrime),
+        ePrime: bigIntToHex64(blinding.ePrime),
       } as VoteRequest
-      console.log('Submitting vote with request body:', requestVote)  // DEBUG
+      console.log('Submitting vote with request body:', requestVote)
       await ballotService.submitVote(election.id, requestVote)
       setStep(4, 'done')
 
       setPhase('done')
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error desconocido'
-      // Mark the currently running step as error
       setSteps((prev) =>
         prev.map((s) => (s.status === 'running' ? { ...s, status: 'error' as const } : s)),
       )
@@ -275,58 +325,51 @@ export function ElectionDetailPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  if (phase === 'loading') {
-    return (
-      <div className="space-y-6">
-        <div className="h-4 w-32 rounded animate-pulse" style={{ background: 'var(--surface-elevated)' }} />
-        <div className="h-8 w-2/3 rounded animate-pulse" style={{ background: 'var(--surface-elevated)' }} />
-        <div className="h-24 rounded-xl animate-pulse" style={{ background: 'var(--surface-elevated)' }} />
-        <div className="space-y-3">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl animate-pulse" style={{ background: 'var(--surface-elevated)' }} />
-          ))}
-        </div>
-      </div>
-    )
-  }
+  if (phase === 'loading') return <LoadingSkeleton />
 
   if (phase === 'error-load') {
     const isFinished = election?.status === 'CLOSED' || election?.status === 'TALLIED'
     return (
-      <div className="space-y-5">
-        <Link
-          to="/elections"
-          className="inline-flex items-center gap-1 text-xs font-medium"
-          style={{ color: 'var(--text-mute)', textDecoration: 'none' }}
-        >
-          <ChevronLeft size={13} strokeWidth={2} />
-          Volver a elecciones
-        </Link>
+      <div className="max-w-2xl mx-auto space-y-5">
+        <BackLink />
 
         {isFinished ? (
           <div
-            className="rounded-xl p-6 space-y-4"
-            style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+            className="rounded-2xl p-7 space-y-5"
+            style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
           >
-            <h1 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-              {election?.title}
-            </h1>
-            <p className="text-sm" style={{ color: 'var(--text-mute)' }}>
-              Esta elección ha finalizado. Puedes consultar la urna electoral para verificar los votos.
-            </p>
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center"
+              style={{ background: ICE_SOFT }}
+            >
+              <Lock size={20} strokeWidth={1.5} style={{ color: NAVY }} />
+            </div>
+            <div>
+              <Eyebrow>Elección finalizada</Eyebrow>
+              <h1
+                className="text-2xl font-semibold mt-2"
+                style={{ color: NAVY, letterSpacing: '-0.02em' }}
+              >
+                {election?.title}
+              </h1>
+              <p className="text-sm mt-1.5" style={{ color: BODY }}>
+                Esta elección ha finalizado. Consulta la urna para verificar los votos registrados.
+              </p>
+            </div>
             <Link
               to={`/elections/${id}/urn`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
-              style={{ background: 'var(--cta-bg)', color: 'var(--cta-fg)', textDecoration: 'none' }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-150 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              style={{ background: WHITE, color: NAVY, textDecoration: 'none', border: `1px solid ${HAIRLINE}` }}
             >
               <ShieldCheck size={14} strokeWidth={2} />
               Ver urna electoral
+              <ArrowRight size={14} strokeWidth={2} />
             </Link>
           </div>
         ) : (
           <div
             className="flex items-start gap-3 px-5 py-4 rounded-xl text-sm"
-            style={{ background: 'var(--accent-red-soft)', color: 'var(--accent-red)' }}
+            style={{ background: '#fee', color: '#c00' }}
           >
             <AlertCircle size={16} strokeWidth={2} className="shrink-0 mt-0.5" />
             {loadError}
@@ -339,152 +382,150 @@ export function ElectionDetailPage() {
   if (!election) return null
 
   return (
-    <div className="space-y-6">
-      {/* Back link */}
-      <Link
-        to="/elections"
-        className="inline-flex items-center gap-1 text-xs font-medium"
-        style={{ color: 'var(--text-mute)', textDecoration: 'none' }}
-      >
-        <ChevronLeft size={13} strokeWidth={2} />
-        Volver a elecciones
-      </Link>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <BackLink />
 
-      {/* Election header */}
+      {/* Election header card */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="rounded-xl p-6 space-y-4"
-        style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+        transition={{ duration: 0.4 }}
+        className="rounded-2xl p-7 space-y-5"
+        style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
       >
         <div>
+          <Eyebrow>Votación activa</Eyebrow>
           <h1
-            className="text-2xl font-semibold tracking-tight"
-            style={{ color: 'var(--text-primary)' }}
+            className="text-2xl font-semibold mt-2 leading-snug"
+            style={{ color: NAVY, letterSpacing: '-0.02em' }}
           >
             {election.title}
           </h1>
-          <p
-            className="text-sm mt-2 leading-relaxed"
-            style={{ color: 'var(--text-body)' }}
-          >
+          <p className="text-sm mt-2 leading-relaxed" style={{ color: BODY }}>
             {election.description}
           </p>
         </div>
 
         {/* Meta row */}
         <div className="flex flex-wrap gap-x-5 gap-y-2">
-          <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-ash)' }}>
-            <Calendar size={12} strokeWidth={2} />
+          <span className="flex items-center gap-1.5 text-xs" style={{ color: MUTE }}>
+            <Calendar size={13} strokeWidth={1.75} />
             Cierra el {formatDate(election.endDate)}
           </span>
-          <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-ash)' }}>
-            <Users size={12} strokeWidth={2} />
+          <span className="flex items-center gap-1.5 text-xs" style={{ color: MUTE }}>
+            <Users size={13} strokeWidth={1.75} />
             {election.allowedRoles.map((r) => ROLE_LABEL[r] ?? r).join(' · ')}
           </span>
-          <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-ash)' }}>
-            <Vote size={12} strokeWidth={2} />
+          <span className="flex items-center gap-1.5 text-xs" style={{ color: MUTE }}>
+            <Vote size={13} strokeWidth={1.75} />
             {election.candidates.length} candidato{election.candidates.length !== 1 ? 's' : ''}
           </span>
         </div>
 
         {/* Privacy notice */}
         <div
-          className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-xs"
-          style={{ background: 'var(--surface-elevated)', color: 'var(--text-mute)' }}
+          className="flex items-start gap-2.5 px-4 py-3 rounded-xl text-xs"
+          style={{ background: ICE_SOFT, color: NAVY }}
         >
-          <ShieldCheck size={13} strokeWidth={2} className="shrink-0 mt-0.5" style={{ color: 'var(--accent-green)' }} />
-          Tu voto es anónimo. El servidor firma una ficha criptográfica sin registrar tu identidad junto al candidato.
+          <ShieldCheck size={13} strokeWidth={2} className="shrink-0 mt-0.5" style={{ color: CYAN }} />
+          <span style={{ color: BODY }}>
+            <strong style={{ color: NAVY }}>Voto anónimo.</strong>{' '}
+            El servidor firma una ficha criptográfica sin registrar tu identidad junto al candidato.
+          </span>
         </div>
       </motion.div>
 
       {/* ── Ballot area ─────────────────────────────────────────────────── */}
       <AnimatePresence mode="wait">
 
-        {/* SELECT phase */}
+        {/* SELECT */}
         {phase === 'select' && (
           <motion.div
             key="select"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
             className="space-y-4"
           >
-            <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-ash)' }}>
-              Selecciona un candidato
-            </h2>
+            <Eyebrow>Selecciona un candidato</Eyebrow>
             <div className="space-y-3">
-              {election.candidates.map((c) => (
-                <CandidateCard
+              {election.candidates.map((c, i) => (
+                <motion.div
                   key={c.id}
-                  candidate={c}
-                  selected={selected?.id === c.id}
-                  onSelect={() => setSelected(c)}
-                />
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.06 }}
+                >
+                  <CandidateCard
+                    candidate={c}
+                    selected={selected?.id === c.id}
+                    onSelect={() => setSelected(c)}
+                  />
+                </motion.div>
               ))}
             </div>
 
-            <div className="pt-2">
+            <div className="pt-1">
               <button
                 type="button"
                 disabled={!selected}
                 onClick={() => setPhase('confirm')}
-                className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-150"
                 style={{
-                  background: 'var(--cta-bg)',
-                  color: 'var(--cta-fg)',
+                  background: selected ? NAVY : ICE_SOFT,
+                  color: selected ? WHITE : MUTE,
                   border: 'none',
                   cursor: selected ? 'pointer' : 'not-allowed',
-                  opacity: selected ? 1 : 0.4,
+                  boxShadow: selected ? '0 4px 12px rgba(5,12,156,0.25)' : 'none',
                 }}
                 onMouseEnter={(e) => {
-                  if (selected) e.currentTarget.style.background = 'var(--cta-bg-hover)'
+                  if (selected) e.currentTarget.style.opacity = '0.9'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'var(--cta-bg)'
+                  e.currentTarget.style.opacity = '1'
                 }}
               >
                 Continuar
+                <ArrowRight size={14} strokeWidth={2.5} />
               </button>
             </div>
           </motion.div>
         )}
 
-        {/* CONFIRM phase */}
+        {/* CONFIRM */}
         {phase === 'confirm' && selected && (
           <motion.div
             key="confirm"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
             className="space-y-5"
           >
-            <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-ash)' }}>
-              Confirmar voto
-            </h2>
+            <Eyebrow>Confirmar voto</Eyebrow>
 
-            {/* Confirmation card */}
+            {/* Selected candidate card */}
             <div
-              className="rounded-xl p-5 space-y-3"
-              style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+              className="rounded-2xl p-6 space-y-4"
+              style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
             >
-              <p className="text-xs" style={{ color: 'var(--text-ash)' }}>Tu candidato seleccionado</p>
-              <div className="flex items-center gap-3">
+              <p className="text-xs font-semibold uppercase" style={{ color: MUTE, letterSpacing: '0.1em' }}>
+                Tu candidato seleccionado
+              </p>
+              <div className="flex items-center gap-4">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-                  style={{ background: 'var(--accent-blue-soft)', color: 'var(--accent-blue)' }}
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center text-base font-bold shrink-0"
+                  style={{ background: STEP_BUBBLE, color: WHITE }}
                 >
                   {selected.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <p className="text-base font-semibold" style={{ color: NAVY, letterSpacing: '-0.01em' }}>
                     {selected.name}
                   </p>
                   {selected.description && (
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-mute)' }}>
+                    <p className="text-sm mt-0.5" style={{ color: BODY }}>
                       {selected.description}
                     </p>
                   )}
@@ -492,113 +533,119 @@ export function ElectionDetailPage() {
               </div>
             </div>
 
-            <p className="text-xs leading-relaxed" style={{ color: 'var(--text-mute)' }}>
-              Al confirmar, se generará una firma anónima mediante el protocolo EC Schnorr.
-              Una vez enviado, <strong style={{ color: 'var(--text-body)' }}>tu voto no puede modificarse</strong>.
+            <p className="text-sm leading-relaxed" style={{ color: MUTE }}>
+              Al confirmar se generará una firma anónima mediante el protocolo EC Schnorr.
+              Una vez enviado,{' '}
+              <strong style={{ color: BODY }}>tu voto no puede modificarse</strong>.
             </p>
 
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={runVoteFlow}
-                className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150"
-                style={{
-                  background: 'var(--cta-bg)',
-                  color: 'var(--cta-fg)',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--cta-bg-hover)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--cta-bg)' }}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-150"
+                style={{ background: NAVY, color: WHITE, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(5,12,156,0.25)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.9' }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
               >
+                <Vote size={14} strokeWidth={2.5} />
                 Confirmar y votar
               </button>
               <button
                 type="button"
                 onClick={() => setPhase('select')}
-                className="px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-150"
                 style={{
                   background: 'transparent',
-                  color: 'var(--text-mute)',
-                  border: '1px solid var(--hairline)',
+                  color: MUTE,
+                  border: `1px solid ${HAIRLINE}`,
                   cursor: 'pointer',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--text-primary)'
-                  e.currentTarget.style.background = 'var(--surface-elevated)'
+                  e.currentTarget.style.color = NAVY
+                  e.currentTarget.style.borderColor = CYAN
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--text-mute)'
-                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = MUTE
+                  e.currentTarget.style.borderColor = HAIRLINE
                 }}
               >
-                <ArrowLeft size={13} strokeWidth={2} className="inline mr-1" />
+                <ArrowLeft size={13} strokeWidth={2} />
                 Cambiar
               </button>
             </div>
           </motion.div>
         )}
 
-        {/* PROCESSING phase */}
+        {/* PROCESSING */}
         {phase === 'processing' && (
           <motion.div
             key="processing"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="rounded-xl p-6 space-y-5"
-            style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+            className="rounded-2xl p-7 space-y-6"
+            style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
           >
-            <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-ash)' }}>
-              Procesando voto anónimo
-            </h2>
-            <div className="space-y-3">
+            <div>
+              <Eyebrow>Procesando voto anónimo</Eyebrow>
+              <p className="text-sm mt-1" style={{ color: MUTE }}>
+                No cierres esta ventana hasta que el proceso finalice.
+              </p>
+            </div>
+            <div className="space-y-4">
               {steps.map((step, i) => (
-                <StepRow key={i} step={step} />
+                <StepRow key={i} step={step} index={i} />
               ))}
             </div>
           </motion.div>
         )}
 
-        {/* DONE phase */}
+        {/* DONE */}
         {phase === 'done' && (
           <motion.div
             key="done"
-            initial={{ opacity: 0, scale: 0.97 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            className="rounded-xl p-8 text-center space-y-4"
-            style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+            transition={{ duration: 0.35 }}
+            className="rounded-2xl p-12 text-center space-y-6"
+            style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
           >
             <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
+              initial={{ scale: 0.4, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
-              className="inline-flex items-center justify-center w-14 h-14 rounded-full mx-auto"
-              style={{ background: 'var(--accent-green-soft)' }}
+              transition={{ delay: 0.15, type: 'spring', stiffness: 220, damping: 18 }}
+              className="inline-flex items-center justify-center w-20 h-20 rounded-full mx-auto"
+              style={{ background: STEP_BUBBLE, boxShadow: `0 8px 32px rgba(5,12,156,0.30)` }}
             >
-              <CheckCircle2 size={28} strokeWidth={2} style={{ color: 'var(--accent-green)' }} />
+              <CheckCircle2 size={36} strokeWidth={1.75} style={{ color: ICE }} />
             </motion.div>
 
             <div>
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-                {alreadyVoted ? 'Ya has votado en esta elección' : '¡Voto registrado!'}
+              <Eyebrow>
+                {alreadyVoted ? 'Voto anterior' : 'Voto registrado'}
+              </Eyebrow>
+              <h2
+                className="text-2xl font-semibold mt-2"
+                style={{ color: NAVY, letterSpacing: '-0.02em' }}
+              >
+                {alreadyVoted ? 'Ya has votado en esta elección' : '¡Voto registrado con éxito!'}
               </h2>
-              <p className="text-sm mt-1" style={{ color: 'var(--text-mute)' }}>
+              <p className="text-sm mt-2 leading-relaxed" style={{ color: BODY }}>
                 {alreadyVoted
                   ? 'Tu voto fue registrado anteriormente de forma anónima.'
-                  : 'Tu voto fue enviado de forma anónima. No puede vincularse a tu identidad.'}
+                  : 'Tu voto fue enviado de forma anónima y no puede vincularse a tu identidad.'}
               </p>
             </div>
 
             <Link
               to="/elections"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-150 shadow-md hover:shadow-lg hover:-translate-y-0.5"
               style={{
-                background: 'var(--surface-elevated)',
-                color: 'var(--text-body)',
-                border: '1px solid var(--hairline)',
+                background: WHITE,
+                color: NAVY,
+                border: `1px solid ${HAIRLINE}`,
                 textDecoration: 'none',
               }}
             >
@@ -608,32 +655,31 @@ export function ElectionDetailPage() {
           </motion.div>
         )}
 
-        {/* ERROR-VOTE phase */}
+        {/* ERROR-VOTE */}
         {phase === 'error-vote' && (
           <motion.div
             key="error-vote"
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
             className="space-y-5"
           >
-            {/* Steps with error state */}
             <div
-              className="rounded-xl p-6 space-y-3"
-              style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}
+              className="rounded-2xl p-7 space-y-5"
+              style={{ background: WHITE, border: `1px solid ${HAIRLINE}` }}
             >
-              <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--text-ash)' }}>
-                Proceso interrumpido
-              </h2>
-              {steps.map((step, i) => (
-                <StepRow key={i} step={step} />
-              ))}
+              <Eyebrow>Proceso interrumpido</Eyebrow>
+              <div className="space-y-4">
+                {steps.map((step, i) => (
+                  <StepRow key={i} step={step} index={i} />
+                ))}
+              </div>
             </div>
 
             {voteError && (
               <div
-                className="flex items-start gap-2.5 px-4 py-3 rounded-lg text-sm"
-                style={{ background: 'var(--accent-red-soft)', color: 'var(--accent-red)' }}
+                className="flex items-start gap-2.5 px-4 py-3 rounded-xl text-sm"
+                style={{ background: '#fee', color: '#c00' }}
               >
                 <AlertCircle size={15} strokeWidth={2} className="shrink-0 mt-0.5" />
                 {voteError}
@@ -648,13 +694,10 @@ export function ElectionDetailPage() {
                   setSteps(INITIAL_STEPS.map((s) => ({ ...s, status: 'pending' as const })))
                   setVoteError(null)
                 }}
-                className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                style={{
-                  background: 'var(--cta-bg)',
-                  color: 'var(--cta-fg)',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-150"
+                style={{ background: NAVY, color: WHITE, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(5,12,156,0.25)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.9' }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
               >
                 Reintentar
               </button>
@@ -666,12 +709,15 @@ export function ElectionDetailPage() {
                   setSteps(INITIAL_STEPS.map((s) => ({ ...s, status: 'pending' as const })))
                   setVoteError(null)
                 }}
-                className="px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                style={{
-                  color: 'var(--text-mute)',
-                  background: 'transparent',
-                  border: '1px solid var(--hairline)',
-                  cursor: 'pointer',
+                className="px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-150"
+                style={{ color: MUTE, background: 'transparent', border: `1px solid ${HAIRLINE}`, cursor: 'pointer' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = NAVY
+                  e.currentTarget.style.borderColor = CYAN
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = MUTE
+                  e.currentTarget.style.borderColor = HAIRLINE
                 }}
               >
                 Cambiar candidato
@@ -682,5 +728,22 @@ export function ElectionDetailPage() {
 
       </AnimatePresence>
     </div>
+  )
+}
+
+// ── Shared back link ───────────────────────────────────────────────────────
+
+function BackLink() {
+  return (
+    <Link
+      to="/elections"
+      className="inline-flex items-center gap-1.5 text-xs font-medium transition-colors duration-150"
+      style={{ color: MUTE, textDecoration: 'none' }}
+      onMouseEnter={(e) => { e.currentTarget.style.color = NAVY }}
+      onMouseLeave={(e) => { e.currentTarget.style.color = MUTE }}
+    >
+      <ChevronLeft size={13} strokeWidth={2.5} />
+      Volver a elecciones
+    </Link>
   )
 }

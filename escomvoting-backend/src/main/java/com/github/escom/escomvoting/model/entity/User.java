@@ -33,6 +33,10 @@ public class User {
     @Column(nullable = false)
     private boolean active = true;
 
+    /** Grants SCOPE_ADMIN regardless of role. Set via CSV import or admin tools. */
+    @Column(name = "is_admin", nullable = false)
+    private boolean admin = false;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -50,5 +54,7 @@ public class User {
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+    public boolean isAdmin() { return admin; }
+    public void setAdmin(boolean admin) { this.admin = admin; }
     public Instant getCreatedAt() { return createdAt; }
 }

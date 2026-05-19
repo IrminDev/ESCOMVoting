@@ -6,6 +6,7 @@ import java.util.UUID;
 public record UrnResponse(
         UUID electionId,
         String electionTitle,
+        String status,
         List<CandidateDTO> candidates,
         PageResponse<BallotDTO> ballots
 ) {}

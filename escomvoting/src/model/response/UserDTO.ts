@@ -5,4 +5,5 @@ export interface UserDTO {
   name: string
   role: 'STUDENT' | 'PROFESSOR' | 'PAAE'
   active: boolean
+  admin: boolean
 }

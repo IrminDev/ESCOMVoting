@@ -1,8 +1,21 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Shield, Sun, Moon, LogOut, Vote, LayoutDashboard } from 'lucide-react'
+import { ShieldCheck, Sun, Moon, LogOut, Vote, LayoutDashboard } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTheme } from '../../contexts/ThemeContext'
-import { cn } from '../../lib/utils'
+
+// ── Design tokens (DESIGN.md v2.0 oceanic) ────────────────────────────────
+
+const NAVY      = '#050C9C'
+const BLUE      = '#3572EF'
+const CYAN      = '#3ABEF9'
+const ICE       = '#A7E6FF'
+const WHITE     = '#ffffff'
+const BODY      = '#3a4a6b'
+const MUTE      = '#6b7a99'
+const HAIRLINE  = 'rgba(58,190,249,0.27)'
+const ICE_SOFT  = 'rgba(167,230,255,0.33)'
+const CYAN_SOFT = 'rgba(58,190,249,0.13)'
+const STEP_BG   = 'linear-gradient(135deg, #050C9C 0%, #3572EF 100%)'
 
 const ROLE_LABEL: Record<string, string> = {
   STUDENT:   'Estudiante',
@@ -11,7 +24,7 @@ const ROLE_LABEL: Record<string, string> = {
 }
 
 export function VoterLayout() {
-  const { session, logout } = useAuth()
+  const { session, isAdmin, logout } = useAuth()
   const { isDark, toggle } = useTheme()
   const navigate = useNavigate()
 
@@ -20,87 +33,111 @@ export function VoterLayout() {
     navigate('/login', { replace: true })
   }
 
-  const roleLabel = ROLE_LABEL[session?.role ?? ''] ?? session?.role ?? ''
-  const isAdmin = session?.role === 'PAAE'
+  const roleLabel = ROLE_LABEL[session?.role ?? ''] ?? (session?.role ?? '')
+  const initial   = session?.name.charAt(0).toUpperCase() ?? '?'
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--canvas)' }}>
-      {/* Top nav */}
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: WHITE }}>
+      {/* ── Top nav ────────────────────────────────────────────────────── */}
       <header
         className="sticky top-0 z-30 h-14 flex items-center gap-4 px-4 sm:px-6"
-        style={{
-          background: 'var(--surface)',
-          borderBottom: '1px solid var(--hairline)',
-        }}
+        style={{ background: WHITE, borderBottom: `1px solid ${HAIRLINE}` }}
       >
         {/* Logo */}
         <Link
           to="/elections"
-          className="flex items-center gap-2 shrink-0"
+          className="flex items-center gap-2 shrink-0 group"
           style={{ textDecoration: 'none' }}
         >
-          <Shield size={18} style={{ color: 'var(--accent-red)' }} strokeWidth={2} />
-          <span className="text-sm font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-            ESCOMVoting
+          <div
+            className="w-6 h-6 rounded-lg flex items-center justify-center"
+            style={{ background: STEP_BG }}
+          >
+            <ShieldCheck size={13} strokeWidth={2.5} style={{ color: ICE }} />
+          </div>
+          <span
+            className="text-sm font-semibold tracking-tight"
+            style={{ color: NAVY, letterSpacing: '-0.02em' }}
+          >
+            ESCOM<span style={{ color: BLUE }}>Voting</span>
           </span>
         </Link>
 
-        {/* Nav */}
-        <nav className="flex items-center gap-1 ml-2">
+        {/* Nav links */}
+        <nav className="flex items-center gap-0.5 ml-2">
           <NavLink
             to="/elections"
             end
-            className={({ isActive }) =>
-              cn(
-                'flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-md transition-colors duration-150',
-                isActive
-                  ? 'text-[var(--text-primary)] bg-[var(--surface-elevated)]'
-                  : 'text-[var(--text-mute)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)]',
-              )
-            }
+            style={({ isActive }) => ({
+              display:        'inline-flex',
+              alignItems:     'center',
+              gap:            '6px',
+              fontSize:       '0.8125rem',
+              fontWeight:     500,
+              padding:        '5px 10px',
+              borderRadius:   '9999px',
+              textDecoration: 'none',
+              transition:     'all 0.15s',
+              background:     isActive ? CYAN_SOFT : 'transparent',
+              color:          isActive ? NAVY      : MUTE,
+            })}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget
+              if (!el.getAttribute('aria-current')) {
+                el.style.background = ICE_SOFT
+                el.style.color      = NAVY
+              }
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget
+              if (!el.getAttribute('aria-current')) {
+                el.style.background = 'transparent'
+                el.style.color      = MUTE
+              }
+            }}
           >
-            <Vote size={14} strokeWidth={2} />
+            <Vote size={13} strokeWidth={2} />
             Elecciones
           </NavLink>
 
           {isAdmin && (
             <Link
               to="/admin"
-              className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-md transition-colors duration-150"
-              style={{ color: 'var(--text-mute)', textDecoration: 'none' }}
+              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-150"
+              style={{ color: MUTE, textDecoration: 'none', background: 'transparent' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--text-primary)'
-                e.currentTarget.style.background = 'var(--surface-elevated)'
+                e.currentTarget.style.background = ICE_SOFT
+                e.currentTarget.style.color      = NAVY
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--text-mute)'
                 e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color      = MUTE
               }}
             >
-              <LayoutDashboard size={14} strokeWidth={2} />
+              <LayoutDashboard size={13} strokeWidth={2} />
               Panel admin
             </Link>
           )}
         </nav>
 
-        {/* Right: user info + actions */}
-        <div className="flex items-center gap-2 ml-auto">
-          {/* Role + name pill */}
+        {/* Right: user + actions */}
+        <div className="flex items-center gap-1.5 ml-auto">
+          {/* User pill */}
           <div
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg"
-            style={{ background: 'var(--surface-elevated)', border: '1px solid var(--hairline)' }}
+            className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full"
+            style={{ background: ICE_SOFT, border: `1px solid ${HAIRLINE}` }}
           >
             <div
-              className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold shrink-0"
-              style={{ background: 'var(--accent-blue-soft)', color: 'var(--accent-blue)' }}
+              className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+              style={{ background: STEP_BG, color: ICE }}
             >
-              {session?.name.charAt(0).toUpperCase() ?? '?'}
+              {initial}
             </div>
             <div className="leading-none">
-              <p className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>
+              <p className="text-xs font-semibold" style={{ color: NAVY }}>
                 {session?.name}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-ash)' }}>
+              <p className="text-xs mt-0.5" style={{ color: MUTE }}>
                 {roleLabel}
               </p>
             </div>
@@ -110,42 +147,44 @@ export function VoterLayout() {
           <button
             onClick={toggle}
             aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-            className="p-2 rounded-md transition-colors duration-150"
-            style={{ color: 'var(--text-mute)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150"
+            style={{ color: MUTE, background: 'transparent', border: 'none', cursor: 'pointer' }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--text-primary)'
-              e.currentTarget.style.background = 'var(--surface-elevated)'
+              e.currentTarget.style.background = ICE_SOFT
+              e.currentTarget.style.color      = NAVY
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--text-mute)'
               e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.color      = MUTE
             }}
           >
-            {isDark ? <Sun size={15} strokeWidth={2} /> : <Moon size={15} strokeWidth={2} />}
+            {isDark
+              ? <Sun  size={14} strokeWidth={2} />
+              : <Moon size={14} strokeWidth={2} />}
           </button>
 
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className="p-2 rounded-md transition-colors duration-150"
             aria-label="Cerrar sesión"
-            style={{ color: 'var(--text-mute)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150"
+            style={{ color: MUTE, background: 'transparent', border: 'none', cursor: 'pointer' }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--accent-red)'
-              e.currentTarget.style.background = 'var(--accent-red-soft)'
+              e.currentTarget.style.background = 'rgba(212,43,43,0.08)'
+              e.currentTarget.style.color      = '#d42b2b'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--text-mute)'
               e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.color      = MUTE
             }}
           >
-            <LogOut size={15} strokeWidth={2} />
+            <LogOut size={14} strokeWidth={2} />
           </button>
         </div>
       </header>
 
-      {/* Page content */}
-      <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      {/* ── Page content ────────────────────────────────────────────────── */}
+      <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-10">
         <Outlet />
       </main>
     </div>

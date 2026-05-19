@@ -32,6 +32,18 @@ public class AdminUserController {
         return PageResponse.from(userRepository.findAll(pageable).map(UserDTO::from));
     }
 
+    /**
+     * Bulk-imports voters from a CSV file. Header row is skipped.
+     *
+     * Expected columns (in order):
+     *   institutionalId,email,name,role,password,isAdmin
+     *
+     * - {@code role}    one of STUDENT, PROFESSOR, PAAE
+     * - {@code isAdmin} truthy (true/1/yes/si) grants SCOPE_ADMIN to that user
+     *                   regardless of role; falsy (false/0/no/empty) leaves it off.
+     *
+     * Duplicate emails or institutional IDs are skipped silently.
+     */
     @PostMapping("/import")
     public ResponseEntity<Map<String, Object>> importUsers(@RequestParam("file") MultipartFile file) {
         int count = userImportService.importFromCsv(file);
