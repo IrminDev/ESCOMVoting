@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Shield, Sun, Moon, Menu, X, ArrowRight } from 'lucide-react'
+import { Shield, Sun, Moon, Menu, X, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useAuth } from '../../contexts/AuthContext'
 import { cn } from '../../lib/utils'
 
 const NAVY = '#050C9C'
@@ -23,8 +24,12 @@ const navRouteLinks = [
 
 export function Navbar() {
   const { isDark, toggle } = useTheme()
+  const { isAuthenticated, isAdmin } = useAuth()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const indexHref = isAdmin ? '/admin' : '/elections'
+  const indexLabel = isAdmin ? 'Panel admin' : 'Mis elecciones'
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 8)
@@ -136,30 +141,57 @@ export function Navbar() {
           </button>
 
           {/* CTA — desktop only */}
-          <Link
-            to="/login"
-            className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium px-5 py-2 transition-all duration-150 group"
-            style={{
-              background: NAVY,
-              color: WHITE,
-              borderRadius: '9999px',
-              textDecoration: 'none',
-              boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
-            }}
-            onMouseEnter={(e) => {
-              ;(e.currentTarget as HTMLAnchorElement).style.background = BLUE
-              ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 6px 18px rgba(53,114,239,0.28)'
-              ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)'
-            }}
-            onMouseLeave={(e) => {
-              ;(e.currentTarget as HTMLAnchorElement).style.background = NAVY
-              ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 12px rgba(5,12,156,0.18)'
-              ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)'
-            }}
-          >
-            Iniciar sesión
-            <ArrowRight size={15} strokeWidth={2.25} className="transition-transform duration-150 group-hover:translate-x-0.5" />
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to={indexHref}
+              className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium px-5 py-2 transition-all duration-150 group"
+              style={{
+                background: NAVY,
+                color: WHITE,
+                borderRadius: '9999px',
+                textDecoration: 'none',
+                boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
+              }}
+              onMouseEnter={(e) => {
+                ;(e.currentTarget as HTMLAnchorElement).style.background = BLUE
+                ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 6px 18px rgba(53,114,239,0.28)'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)'
+              }}
+              onMouseLeave={(e) => {
+                ;(e.currentTarget as HTMLAnchorElement).style.background = NAVY
+                ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 12px rgba(5,12,156,0.18)'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)'
+              }}
+            >
+              <LayoutDashboard size={15} strokeWidth={2.25} />
+              {indexLabel}
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium px-5 py-2 transition-all duration-150 group"
+              style={{
+                background: NAVY,
+                color: WHITE,
+                borderRadius: '9999px',
+                textDecoration: 'none',
+                boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
+              }}
+              onMouseEnter={(e) => {
+                ;(e.currentTarget as HTMLAnchorElement).style.background = BLUE
+                ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 6px 18px rgba(53,114,239,0.28)'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)'
+              }}
+              onMouseLeave={(e) => {
+                ;(e.currentTarget as HTMLAnchorElement).style.background = NAVY
+                ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 12px rgba(5,12,156,0.18)'
+                ;(e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)'
+              }}
+            >
+              Iniciar sesión
+              <ArrowRight size={15} strokeWidth={2.25} className="transition-transform duration-150 group-hover:translate-x-0.5" />
+            </Link>
+          )}
 
           {/* Hamburger — mobile only */}
           <button
@@ -220,21 +252,39 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              to="/login"
-              className="mt-3 inline-flex items-center justify-center gap-1.5 w-full text-sm font-medium px-5 py-2.5"
-              style={{
-                background: NAVY,
-                color: WHITE,
-                borderRadius: '9999px',
-                textDecoration: 'none',
-                boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
-              }}
-              onClick={() => setMenuOpen(false)}
-            >
-              Iniciar sesión
-              <ArrowRight size={15} strokeWidth={2.25} />
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                to={indexHref}
+                className="mt-3 inline-flex items-center justify-center gap-1.5 w-full text-sm font-medium px-5 py-2.5"
+                style={{
+                  background: NAVY,
+                  color: WHITE,
+                  borderRadius: '9999px',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
+                }}
+                onClick={() => setMenuOpen(false)}
+              >
+                <LayoutDashboard size={15} strokeWidth={2.25} />
+                {indexLabel}
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="mt-3 inline-flex items-center justify-center gap-1.5 w-full text-sm font-medium px-5 py-2.5"
+                style={{
+                  background: NAVY,
+                  color: WHITE,
+                  borderRadius: '9999px',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 12px rgba(5,12,156,0.18)',
+                }}
+                onClick={() => setMenuOpen(false)}
+              >
+                Iniciar sesión
+                <ArrowRight size={15} strokeWidth={2.25} />
+              </Link>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

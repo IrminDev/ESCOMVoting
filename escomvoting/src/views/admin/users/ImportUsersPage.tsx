@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ArrowRight,
   Sparkles,
+  UserPlus,
 } from 'lucide-react'
 import { userService } from '../../../services/user.service'
 import {
@@ -83,14 +84,31 @@ export function ImportUsersPage() {
     <div className="max-w-2xl space-y-8">
       {/* Header */}
       <div>
-        <Link
-          to="/admin/users"
-          className="inline-flex items-center gap-1 text-xs font-semibold mb-5"
-          style={{ color: BLUE, textDecoration: 'none' }}
-        >
-          <ChevronLeft size={13} strokeWidth={2.5} />
-          Volver a usuarios
-        </Link>
+        <div className="flex items-center justify-between mb-5">
+          <Link
+            to="/admin/users"
+            className="inline-flex items-center gap-1 text-xs font-semibold"
+            style={{ color: BLUE, textDecoration: 'none' }}
+          >
+            <ChevronLeft size={13} strokeWidth={2.5} />
+            Volver a usuarios
+          </Link>
+          <Link
+            to="/admin/users/new"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg transition-all"
+            style={{
+              background: BLUE_SOFT,
+              color: BLUE,
+              border: `1px solid rgba(53,114,239,0.25)`,
+              textDecoration: 'none',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(53,114,239,0.22)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = BLUE_SOFT }}
+          >
+            <UserPlus size={12} strokeWidth={2.5} />
+            Registro individual
+          </Link>
+        </div>
         <span
           className="inline-flex items-center gap-1.5 mb-3 text-xs font-semibold uppercase"
           style={{ color: BLUE, letterSpacing: '0.18em' }}

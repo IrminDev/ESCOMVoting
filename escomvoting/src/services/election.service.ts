@@ -47,4 +47,9 @@ export const electionService = {
   listResults(id: string, page = 0, size = 20): Promise<PageResponse<ElectionResultDTO>> {
     return requestAnon<PageResponse<ElectionResultDTO>>('GET', `/api/elections/${id}/results?page=${page}&size=${size}`)
   },
+
+  /** All candidates tied for the top weighted score. */
+  listWinners(id: string): Promise<ElectionResultDTO[]> {
+    return requestAnon<ElectionResultDTO[]>('GET', `/api/elections/${id}/winners`)
+  },
 }

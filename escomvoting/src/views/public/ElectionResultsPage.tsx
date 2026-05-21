@@ -135,6 +135,7 @@ export function ElectionResultsPage() {
   const { id } = useParams<{ id: string }>()
 
   const [results, setResults] = useState<ElectionResultDTO[]>([])
+  const [winners, setWinners] = useState<ElectionResultDTO[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -148,13 +149,16 @@ export function ElectionResultsPage() {
     setLoading(true)
     setError(null)
 
-    electionService
-      .listResults(id, 0, 200)
-      .then((page) => {
+    Promise.all([
+      electionService.listResults(id, 0, 200),
+      electionService.listWinners(id),
+    ])
+      .then(([page, winnersList]) => {
         const sorted = [...page.content].sort(
           (a, b) => Number(b.weightedScore) - Number(a.weightedScore),
         )
         setResults(sorted)
+        setWinners(winnersList)
       })
       .catch((err: unknown) => {
         setError(err instanceof Error ? err.message : 'No se pudieron cargar los resultados')
@@ -166,7 +170,7 @@ export function ElectionResultsPage() {
   const totalStudents     = results.reduce((s, r) => s + r.studentVotes, 0)
   const totalProfessors   = results.reduce((s, r) => s + r.professorVotes, 0)
   const totalPaae         = results.reduce((s, r) => s + r.paaeVotes, 0)
-  const winner            = results[0] ?? null
+  const isTied            = winners.length > 1
 
   return (
     <div
@@ -245,9 +249,9 @@ export function ElectionResultsPage() {
       )}
 
       {/* Summary cards */}
-      {!loading && !error && results.length > 0 && winner && (
+      {!loading && !error && results.length > 0 && winners.length > 0 && (
         <>
-          {/* Winner + total */}
+          {/* Winner(s) + total */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div
               className="col-span-1 sm:col-span-2 p-5 rounded-xl flex items-start gap-4"
@@ -259,19 +263,29 @@ export function ElectionResultsPage() {
               >
                 <Trophy size={18} strokeWidth={2.25} />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <p
                   className="text-xs font-semibold uppercase tracking-widest mb-1"
                   style={{ color: ICE, letterSpacing: '0.18em' }}
                 >
-                  Ganador
+                  {isTied ? 'Empate — Ganadores' : 'Ganador'}
                 </p>
-                <p className="text-lg font-semibold" style={{ color: WHITE }}>
-                  {winner.candidateName}
-                </p>
+                {isTied ? (
+                  <ul className="space-y-1">
+                    {winners.map((w) => (
+                      <li key={w.candidateId} className="text-lg font-semibold" style={{ color: WHITE }}>
+                        {w.candidateName}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-lg font-semibold" style={{ color: WHITE }}>
+                    {winners[0].candidateName}
+                  </p>
+                )}
                 <p className="text-sm mt-0.5" style={{ color: 'rgba(167,230,255,0.8)' }}>
-                  {formatWeightedScore(winner.weightedScore)} pts
-                  {totalVotes > 0 && ` · ${formatPercent((winner.voteCount / totalVotes) * 100)} del total`}
+                  {formatWeightedScore(winners[0].weightedScore)} pts
+                  {!isTied && totalVotes > 0 && ` · ${formatPercent((winners[0].voteCount / totalVotes) * 100)} del total`}
                 </p>
               </div>
             </div>
@@ -362,7 +376,7 @@ export function ElectionResultsPage() {
             <div>
               {results.map((result, idx) => {
                 const rank = idx + 1
-                const isWinner = rank === 1
+                const isWinner = winners.some((w) => w.candidateId === result.candidateId)
                 const pct = totalVotes > 0 ? (result.voteCount / totalVotes) * 100 : 0
 
                 return (
@@ -383,7 +397,7 @@ export function ElectionResultsPage() {
                         style={{ color: isWinner ? NAVY : MUTE }}
                       >
                         {isWinner && <Trophy size={13} strokeWidth={2.25} style={{ color: BLUE }} />}
-                        #{rank}
+                        #{isWinner ? 1 : rank}
                       </span>
 
                       <span

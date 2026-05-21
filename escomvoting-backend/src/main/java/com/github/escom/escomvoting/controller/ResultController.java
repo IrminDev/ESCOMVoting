@@ -11,6 +11,7 @@ import com.github.escom.escomvoting.service.ElectionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,6 +28,27 @@ public class ResultController {
         this.resultRepository = resultRepository;
         this.electionService = electionService;
         this.ballotRepository = ballotRepository;
+    }
+
+    @GetMapping("/winners")
+    public List<ElectionResultDTO> winners(@PathVariable UUID electionId) {
+        var election = electionService.findOrThrow(electionId);
+        if (election.getStatus() != ElectionStatus.TALLIED) {
+            throw VotingException.badRequest("Results are not yet available");
+        }
+
+        return resultRepository.findTopScorersByElectionId(electionId).stream()
+                .map(r -> {
+                    UUID candidateId = r.getCandidate().getId();
+                    long studentVotes = ballotRepository.countByElectionIdAndCandidateIdAndGroup(
+                            electionId, candidateId, UserRole.STUDENT);
+                    long professorVotes = ballotRepository.countByElectionIdAndCandidateIdAndGroup(
+                            electionId, candidateId, UserRole.PROFESSOR);
+                    long paaeVotes = ballotRepository.countByElectionIdAndCandidateIdAndGroup(
+                            electionId, candidateId, UserRole.PAAE);
+                    return ElectionResultDTO.from(r, studentVotes, professorVotes, paaeVotes);
+                })
+                .toList();
     }
 
     @GetMapping("/results")

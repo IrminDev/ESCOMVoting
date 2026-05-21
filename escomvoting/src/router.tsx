@@ -14,6 +14,7 @@ import { ElectionsPage } from './views/admin/elections/ElectionsPage'
 import { NewElectionPage } from './views/admin/elections/NewElectionPage'
 import { UsersPage } from './views/admin/users/UsersPage'
 import { ImportUsersPage } from './views/admin/users/ImportUsersPage'
+import { CreateUserPage } from './views/admin/users/CreateUserPage'
 import { ElectionsListPage } from './views/voter/ElectionsListPage'
 import { ElectionDetailPage } from './views/voter/ElectionDetailPage'
 import { UrnPage } from './views/urn/UrnPage'
@@ -102,6 +103,7 @@ export function AppRouter() {
           <Route path="elections/new" element={<NewElectionPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="users/import" element={<ImportUsersPage />} />
+          <Route path="users/new" element={<CreateUserPage />} />
         </Route>
 
         {/* Fallback */}

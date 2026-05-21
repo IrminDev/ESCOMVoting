@@ -7,7 +7,8 @@
       "Bash(grep -E \"^\\(shield-check|lock|vote|eye|fingerprint|sparkles|arrow-right|arrow-up-right|check-circle-2|key-round|bar-chart-3|users|chevron-right|calendar|award\\)\\\\.js$\")",
       "Bash(echo \"EXIT=$?\")",
       "Bash(mvn -q -o compile)",
-      "Bash(./gradlew -q --offline compileJava)"
+      "Bash(./gradlew -q --offline compileJava)",
+      "Bash(xargs cat -n)"
     ]
   }
 }
