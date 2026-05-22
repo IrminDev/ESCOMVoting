@@ -16,6 +16,10 @@ export const electionService = {
     return request<ElectionDTO>('POST', '/api/admin/elections', body)
   },
 
+  update(id: string, body: CreateElectionRequest): Promise<ElectionDTO> {
+    return request<ElectionDTO>('PUT', `/api/admin/elections/${id}`, body)
+  },
+
   updateStatus(id: string, body: UpdateStatusRequest): Promise<ElectionDTO> {
     return request<ElectionDTO>('PUT', `/api/admin/elections/${id}/status`, body)
   },

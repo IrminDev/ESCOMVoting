@@ -12,6 +12,7 @@ import { LoginPage } from './views/auth/LoginPage'
 import { DashboardPage } from './views/admin/DashboardPage'
 import { ElectionsPage } from './views/admin/elections/ElectionsPage'
 import { NewElectionPage } from './views/admin/elections/NewElectionPage'
+import { EditElectionPage } from './views/admin/elections/EditElectionPage'
 import { UsersPage } from './views/admin/users/UsersPage'
 import { ImportUsersPage } from './views/admin/users/ImportUsersPage'
 import { CreateUserPage } from './views/admin/users/CreateUserPage'
@@ -101,6 +102,7 @@ export function AppRouter() {
           <Route index element={<DashboardPage />} />
           <Route path="elections" element={<ElectionsPage />} />
           <Route path="elections/new" element={<NewElectionPage />} />
+          <Route path="elections/:id/edit" element={<EditElectionPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="users/import" element={<ImportUsersPage />} />
           <Route path="users/new" element={<CreateUserPage />} />

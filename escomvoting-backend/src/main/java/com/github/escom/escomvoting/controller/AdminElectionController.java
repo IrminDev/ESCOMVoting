@@ -42,6 +42,11 @@ public class AdminElectionController {
         return electionService.create(req, admin);
     }
 
+    @PutMapping("/{id}")
+    public ElectionDTO update(@PathVariable UUID id, @RequestBody CreateElectionRequest req) {
+        return electionService.update(id, req);
+    }
+
     @PutMapping("/{id}/status")
     public ElectionDTO updateStatus(@PathVariable UUID id,
                                     @RequestBody Map<String, String> body) {

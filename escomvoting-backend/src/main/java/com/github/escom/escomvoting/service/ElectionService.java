@@ -95,6 +95,52 @@ public class ElectionService {
     }
 
     @Transactional
+    public ElectionDTO update(UUID id, CreateElectionRequest req) {
+        Election election = findOrThrow(id);
+        if (election.getStatus() != ElectionStatus.DRAFT) {
+            throw VotingException.badRequest("Only DRAFT elections can be updated");
+        }
+        if (req.allowedRoles() == null || req.allowedRoles().isEmpty()) {
+            throw VotingException.badRequest("At least one allowed role required");
+        }
+        validateRoles(req.allowedRoles());
+
+        election.setTitle(req.title());
+        election.setDescription(req.description());
+        election.setStartDate(req.startDate());
+        election.setEndDate(req.endDate());
+        election.setAllowedRoles(req.allowedRoles().toArray(new String[0]));
+
+        election.setKeyPairForRole(UserRole.STUDENT, null, null);
+        election.setKeyPairForRole(UserRole.PROFESSOR, null, null);
+        election.setKeyPairForRole(UserRole.PAAE, null, null);
+
+        for (String roleStr : req.allowedRoles()) {
+            UserRole role = UserRole.valueOf(roleStr.toUpperCase());
+            ECKeyPairUtil.KeyPair kp = ECKeyPairUtil.generate();
+            election.setKeyPairForRole(role,
+                    CryptoUtils.pointToHex(kp.publicKey()),
+                    ECKeyPairUtil.encryptPrivateKey(kp.privateKey(), electionKeySecret));
+        }
+
+        election.getCandidates().clear();
+
+        if (req.candidates() != null) {
+            for (int i = 0; i < req.candidates().size(); i++) {
+                var input = req.candidates().get(i);
+                Candidate c = new Candidate();
+                c.setElection(election);
+                c.setName(input.name());
+                c.setDescription(input.description());
+                c.setPosition(i);
+                election.getCandidates().add(c);
+            }
+        }
+
+        return ElectionDTO.from(electionRepository.save(election));
+    }
+
+    @Transactional
     public ElectionDTO updateStatus(UUID id, String newStatus) {
         Election election = findOrThrow(id);
         ElectionStatus next = parseStatus(newStatus);

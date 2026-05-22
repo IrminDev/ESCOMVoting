@@ -9,6 +9,7 @@ import {
   AlertCircle,
   CheckCircle2,
   Sparkles,
+  Pencil,
 } from 'lucide-react'
 import { electionService } from '../../../services/election.service'
 import { Pagination } from '../../../components/shared/Pagination'
@@ -341,6 +342,29 @@ export function ElectionsPage() {
                           <span className="text-xs" style={{ color: MUTE }}>
                             —
                           </span>
+                        )}
+                        {el.status === 'DRAFT' && (
+                          <Link
+                            to={`/admin/elections/${el.id}/edit`}
+                            className="ml-2 text-xs font-medium px-2.5 py-1.5 rounded-full transition-all inline-flex items-center gap-1"
+                            style={{
+                              background: 'transparent',
+                              color: NAVY,
+                              border: `1px solid transparent`,
+                              textDecoration: 'none',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = 'rgba(53,114,239,0.1)'
+                              e.currentTarget.style.color = BLUE
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = 'transparent'
+                              e.currentTarget.style.color = NAVY
+                            }}
+                            title="Editar elección"
+                          >
+                            <Pencil size={14} strokeWidth={2} />
+                          </Link>
                         )}
                       </td>
                       <td className="px-6 py-4">
