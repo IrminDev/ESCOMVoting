@@ -21,6 +21,7 @@ import { ElectionDetailPage } from './views/voter/ElectionDetailPage'
 import { UrnPage } from './views/urn/UrnPage'
 import { PastElectionsPage } from './views/public/PastElectionsPage'
 import { ElectionResultsPage } from './views/public/ElectionResultsPage'
+import { ProfilePage } from './views/admin/profile/ProfilePage'
 
 // ── Layout wrappers ────────────────────────────────────────────────────────
 
@@ -87,6 +88,7 @@ export function AppRouter() {
           }
         >
           <Route index element={<ElectionsListPage />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path=":id" element={<ElectionDetailPage />} />
         </Route>
 
@@ -106,6 +108,7 @@ export function AppRouter() {
           <Route path="users" element={<UsersPage />} />
           <Route path="users/import" element={<ImportUsersPage />} />
           <Route path="users/new" element={<CreateUserPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
 
         {/* Fallback */}

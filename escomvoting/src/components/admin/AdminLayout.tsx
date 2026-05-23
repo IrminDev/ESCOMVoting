@@ -193,11 +193,23 @@ export function AdminLayout() {
         className="relative px-3 py-4 space-y-2 shrink-0"
         style={{ borderTop: `1px solid ${HAIRLINE_ICE}` }}
       >
-        <div
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg"
-          style={{
-            background: 'rgba(167,230,255,0.07)',
-            border: `1px solid ${HAIRLINE_ICE}`,
+        <NavLink
+          to="/admin/profile"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150"
+          style={({ isActive }) => ({
+            background: isActive ? ACTIVE_BG : 'rgba(167,230,255,0.07)',
+            border: `1px solid ${isActive ? HAIRLINE_ICE : 'transparent'}`,
+            textDecoration: 'none'
+          })}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.15)'
+          }}
+          onMouseLeave={(e) => {
+            if (!e.currentTarget.classList.contains('active')) {
+              e.currentTarget.style.background = 'rgba(167,230,255,0.07)'
+            } else {
+              e.currentTarget.style.background = ACTIVE_BG
+            }
           }}
         >
           <div
@@ -223,7 +235,7 @@ export function AdminLayout() {
               {session?.role ?? 'PAAE'}
             </p>
           </div>
-        </div>
+        </NavLink>
 
         <button
           onClick={handleLogout}

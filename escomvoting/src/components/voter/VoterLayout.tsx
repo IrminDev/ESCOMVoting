@@ -123,9 +123,16 @@ export function VoterLayout() {
         {/* Right: user + actions */}
         <div className="flex items-center gap-1.5 ml-auto">
           {/* User pill */}
-          <div
-            className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full"
-            style={{ background: ICE_SOFT, border: `1px solid ${HAIRLINE}` }}
+          <Link
+            to="/elections/profile"
+            className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all duration-150"
+            style={{ background: ICE_SOFT, border: `1px solid ${HAIRLINE}`, textDecoration: 'none' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = CYAN_SOFT
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = ICE_SOFT
+            }}
           >
             <div
               className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
@@ -134,14 +141,14 @@ export function VoterLayout() {
               {initial}
             </div>
             <div className="leading-none">
-              <p className="text-xs font-semibold" style={{ color: NAVY }}>
+              <p className="text-xs font-semibold hover:underline" style={{ color: NAVY }}>
                 {session?.name}
               </p>
               <p className="text-xs mt-0.5" style={{ color: MUTE }}>
                 {roleLabel}
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Theme toggle */}
           <button

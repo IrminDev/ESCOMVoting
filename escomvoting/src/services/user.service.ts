@@ -18,4 +18,12 @@ export const userService = {
     form.append('file', file)
     return request<ImportResponse>('POST', '/api/admin/users/import', form)
   },
+
+  getProfile(): Promise<UserDTO> {
+    return request<UserDTO>('GET', '/api/me')
+  },
+
+  updateProfile(body: any): Promise<UserDTO> {
+    return request<UserDTO>('PUT', '/api/me', body)
+  },
 }

@@ -22,6 +22,7 @@ interface AuthContextValue {
   isAdmin: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => void
+  updateSessionName?: (name: string) => void
 }
 
 // ── Context ────────────────────────────────────────────────────────────────
@@ -45,6 +46,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null)
   }, [])
 
+  const updateSessionName = useCallback((name: string) => {
+    setSession(prev => {
+      if (!prev) return null
+      const updated = { ...prev, name }
+      saveSession(updated)
+      return updated
+    })
+  }, [])
+
   const value = useMemo<AuthContextValue>(
     () => ({
       session,
@@ -52,8 +62,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAdmin: session?.role === 'PAAE',
       login,
       logout,
+      updateSessionName,
     }),
-    [session, login, logout],
+    [session, login, logout, updateSessionName],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
