@@ -80,7 +80,7 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--hairline-strong); border-radius: 3px; }
 
 /* ── Selection ─────────────────────────────────────────────────────── */
-::selection { background: var(--accent-blue-soft); color: var(--text-primary); }
+::selection { background: rgba(58, 190, 249, 0.25); color: inherit; }
 
 /* ── Focus ring ────────────────────────────────────────────────────── */
 :focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
