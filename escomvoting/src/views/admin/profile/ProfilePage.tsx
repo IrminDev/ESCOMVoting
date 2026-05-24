@@ -104,8 +104,7 @@ export function ProfilePage() {
 
     setSaving(true)
     try {
-      const updatedUser = await userService.updateProfile({
-        name: name.trim(),
+      await userService.updateProfile({
         currentPassword: currentPassword || undefined,
         newPassword: newPassword || undefined
       })
@@ -115,10 +114,6 @@ export function ProfilePage() {
       setNewPassword('')
       setConfirmPassword('')
       
-      // Update name in session if changed
-      if (updateSessionName && session?.name !== updatedUser.name) {
-        updateSessionName(updatedUser.name)
-      }
       
       setTimeout(() => setSuccess(false), 3000)
     } catch (err) {
@@ -140,10 +135,10 @@ export function ProfilePage() {
           <User size={24} strokeWidth={2} />
         </div>
         <h1 className="font-semibold tracking-tight text-3xl" style={{ color: NAVY }}>
-          Mi Perfil
+          {name || 'Cargando...'}
         </h1>
         <p className="text-sm mt-2" style={{ color: BODY }}>
-          Actualiza tu información personal y contraseña.
+          {email || 'Cargando...'}
         </p>
       </div>
 
@@ -167,33 +162,6 @@ export function ProfilePage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <SectionCard title="Información Personal" subtitle="Tus datos básicos en la plataforma.">
-          <div className="space-y-5">
-            <FieldGroup label="Nombre completo" hint="requerido">
-              <input
-                type="text"
-                className={inputCls}
-                style={inputStyle}
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-                disabled={saving}
-                {...focusHandlers}
-              />
-            </FieldGroup>
-            <FieldGroup label="Correo electrónico" hint="no modificable">
-              <input
-                type="email"
-                className={inputCls}
-                style={{ ...inputStyle, background: '#f8fafc', color: MUTE, cursor: 'not-allowed' }}
-                value={email}
-                disabled
-                readOnly
-              />
-            </FieldGroup>
-          </div>
-        </SectionCard>
-
         <SectionCard title="Seguridad" subtitle="Cambia tu contraseña si lo consideras necesario. Déjalo en blanco si no deseas cambiarla.">
           <div className="space-y-5">
             <FieldGroup label="Contraseña actual" hint="requerida solo para cambiarla">

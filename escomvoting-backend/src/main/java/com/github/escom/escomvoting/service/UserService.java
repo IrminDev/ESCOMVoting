@@ -25,10 +25,6 @@ public class UserService {
         User user = userRepository.findById(authenticatedUser.getId())
                 .orElseThrow(() -> VotingException.notFound("Usuario no encontrado"));
 
-        if (req.name() != null && !req.name().trim().isEmpty()) {
-            user.setName(req.name().trim());
-        }
-
         if (req.newPassword() != null && !req.newPassword().trim().isEmpty()) {
             if (req.currentPassword() == null || req.currentPassword().trim().isEmpty()) {
                 throw VotingException.badRequest("Debe proporcionar la contraseña actual");
