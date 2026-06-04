@@ -4,6 +4,7 @@ import com.github.escom.escomvoting.exception.VotingException;
 import com.github.escom.escomvoting.model.entity.User;
 import com.github.escom.escomvoting.model.entity.UserRole;
 import com.github.escom.escomvoting.repository.UserRepository;
+import com.github.escom.escomvoting.util.PasswordGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,15 +29,22 @@ public class UserImportService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public UserImportService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserImportService(UserRepository userRepository,
+                             PasswordEncoder passwordEncoder,
+                             EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
+
+    /** A user pending persistence together with the plaintext password to email them. */
+    private record PendingUser(User user, String plainPassword) {}
 
     @Transactional
     public int importFromCsv(MultipartFile file) {
-        List<User> toSave = new ArrayList<>();
+        List<PendingUser> pending = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
@@ -63,22 +71,31 @@ public class UserImportService {
                     continue; // skip duplicates silently
                 }
 
+                // Blank password column → generate a random temporary one to email the user
+                String plainPassword = password.isBlank() ? PasswordGenerator.generate() : password;
+
                 User user = new User();
                 user.setInstitutionalId(institutionalId);
                 user.setEmail(email);
                 user.setName(name);
                 user.setRole(UserRole.valueOf(role));
-                user.setPasswordHash(passwordEncoder.encode(password));
+                user.setPasswordHash(passwordEncoder.encode(plainPassword));
                 user.setAdmin(isAdmin);
-                toSave.add(user);
+                pending.add(new PendingUser(user, plainPassword));
             }
         } catch (VotingException e) {
             throw e;
         } catch (Exception e) {
             throw VotingException.badRequest("Failed to parse CSV: " + e.getMessage());
         }
-        userRepository.saveAll(toSave);
-        return toSave.size();
+
+        userRepository.saveAll(pending.stream().map(PendingUser::user).toList());
+
+        // Send welcome emails after persistence; each send is async and never throws.
+        for (PendingUser p : pending) {
+            emailService.sendWelcomeEmail(p.user().getEmail(), p.user().getName(), p.plainPassword());
+        }
+        return pending.size();
     }
 
     private static boolean parseAdminFlag(String raw, int lineNum) {

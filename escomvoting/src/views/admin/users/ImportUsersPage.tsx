@@ -27,9 +27,9 @@ import {
 
 const CSV_COLUMNS = 'institutionalId,email,name,role,password,isAdmin'
 const CSV_EXAMPLE =
-  'B220234,juan.perez@escom.ipn.mx,Juan Pérez García,STUDENT,TempPass123,false\n' +
-  'P10051,maria.gomez@escom.ipn.mx,María Gómez López,PROFESSOR,TempPass456,false\n' +
-  'A00231,coord.paae@escom.ipn.mx,Ana López Ruiz,PAAE,TempPass789,true'
+  'B220234,juan.perez@escom.ipn.mx,Juan Pérez García,STUDENT,,false\n' +
+  'P10051,maria.gomez@escom.ipn.mx,María Gómez López,PROFESSOR,,false\n' +
+  'A00231,coord.paae@escom.ipn.mx,Ana López Ruiz,PAAE,MiClaveFija1,true'
 
 type UploadState = 'idle' | 'loading' | 'success' | 'error'
 
@@ -193,6 +193,26 @@ export function ImportUsersPage() {
             PAAE
           </code>
         </p>
+        <div
+          className="flex items-start gap-2 text-xs p-3 rounded-lg"
+          style={{
+            background: 'rgba(58,190,249,0.10)',
+            border: `1px solid ${HAIRLINE_CYAN}`,
+            color: BODY,
+          }}
+        >
+          <span
+            className="font-mono px-1.5 py-0.5 rounded shrink-0"
+            style={{ background: NAVY, color: ICE }}
+          >
+            password
+          </span>
+          <span>
+            Déjala <strong>vacía</strong> para que el sistema genere una contraseña temporal
+            aleatoria. En cualquier caso se envía un correo de bienvenida a cada usuario con
+            sus credenciales de acceso.
+          </span>
+        </div>
         <div
           className="flex items-start gap-2 text-xs p-3 rounded-lg"
           style={{

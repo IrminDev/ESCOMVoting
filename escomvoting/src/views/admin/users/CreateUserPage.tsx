@@ -82,6 +82,8 @@ export function CreateUserPage() {
           </h2>
           <p className="text-sm" style={{ color: MUTE }}>
             <strong style={{ color: NAVY }}>{name}</strong> fue registrado correctamente.
+            Se envió un correo de bienvenida con sus credenciales a{' '}
+            <strong style={{ color: NAVY }}>{email}</strong>.
           </p>
           <div className="flex justify-center gap-3 pt-2">
             <button
@@ -215,18 +217,22 @@ export function CreateUserPage() {
 
           <label className="flex flex-col gap-1.5">
             <span className="text-xs font-semibold uppercase" style={{ color: MUTE, letterSpacing: '0.1em' }}>
-              Contraseña temporal
+              Contraseña temporal <span style={{ textTransform: 'none', fontWeight: 400 }}>(opcional)</span>
             </span>
             <input
-              required
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="Se genera automáticamente"
               style={fieldStyle}
             />
           </label>
         </div>
+
+        <p className="text-xs -mt-2" style={{ color: MUTE, lineHeight: 1.5 }}>
+          Si dejas la contraseña vacía, el sistema generará una temporal y la enviará por
+          correo al usuario junto con un mensaje de bienvenida.
+        </p>
 
         <label className="flex items-center gap-3 cursor-pointer select-none">
           <input
