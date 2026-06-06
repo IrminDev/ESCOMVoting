@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Search, Upload, ArrowRight, Sparkles } from 'lucide-react'
+import { Search, Upload, ArrowRight, Sparkles, Pencil, Trash2, MailCheck } from 'lucide-react'
 import { userService } from '../../../services/user.service'
 import { Pagination } from '../../../components/shared/Pagination'
+import { ConfirmDialog } from '../../../components/shared/ConfirmDialog'
 import type { UserDTO } from '../../../model/response/UserDTO'
 import type { PageResponse } from '../../../model/response/PageResponse'
 import {
@@ -49,6 +50,10 @@ export function UsersPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [query, setQuery] = useState('')
+  const [actionMsg, setActionMsg] = useState<string | null>(null)
+  const [busyId, setBusyId] = useState<string | null>(null)
+  const [version, setVersion] = useState(0)
+  const [pendingDelete, setPendingDelete] = useState<UserDTO | null>(null)
 
   useEffect(() => {
     setLoading(true)
@@ -59,7 +64,26 @@ export function UsersPage() {
         setError(err instanceof Error ? err.message : 'Error al cargar usuarios'),
       )
       .finally(() => setLoading(false))
-  }, [page])
+  }, [page, version])
+
+  async function confirmDelete() {
+    if (!pendingDelete) return
+    const u = pendingDelete
+    setBusyId(u.id)
+    setError(null)
+    setActionMsg(null)
+    try {
+      await userService.remove(u.id)
+      setActionMsg(`Usuario ${u.name} eliminado.`)
+      setVersion((v) => v + 1)
+      setPendingDelete(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al eliminar el usuario')
+      setPendingDelete(null)
+    } finally {
+      setBusyId(null)
+    }
+  }
 
   const users = data?.content ?? []
   const filtered = users.filter((u) => {
@@ -168,6 +192,16 @@ export function UsersPage() {
         </p>
       )}
 
+      {actionMsg && (
+        <p
+          className="flex items-center gap-2 text-sm px-4 py-3 rounded-lg"
+          style={{ background: 'rgba(53,114,239,0.1)', color: BLUE }}
+        >
+          <MailCheck size={15} strokeWidth={2} className="shrink-0" />
+          {actionMsg}
+        </p>
+      )}
+
       {/* Table */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -204,6 +238,12 @@ export function UsersPage() {
                       </th>
                     ),
                   )}
+                  <th
+                    className="text-right px-6 py-4 text-xs font-semibold uppercase whitespace-nowrap"
+                    style={{ color: MUTE, letterSpacing: '0.1em' }}
+                  >
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -255,6 +295,34 @@ export function UsersPage() {
                         {u.active ? 'Activo' : 'Inactivo'}
                       </span>
                     </td>
+                    <td className="px-6 py-3.5">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Link
+                          to={`/admin/users/${u.id}/edit`}
+                          title="Editar usuario"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                          style={{ color: BLUE, background: 'rgba(53,114,239,0.08)' }}
+                        >
+                          <Pencil size={15} strokeWidth={2} />
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => setPendingDelete(u)}
+                          disabled={busyId === u.id}
+                          title="Eliminar usuario"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                          style={{
+                            color: '#c0392b',
+                            background: 'rgba(192,57,43,0.08)',
+                            border: 'none',
+                            cursor: busyId === u.id ? 'not-allowed' : 'pointer',
+                            opacity: busyId === u.id ? 0.5 : 1,
+                          }}
+                        >
+                          <Trash2 size={15} strokeWidth={2} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -272,6 +340,27 @@ export function UsersPage() {
           onPage={setPage}
         />
       )}
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        tone="danger"
+        icon={<Trash2 size={20} strokeWidth={2} />}
+        title="Eliminar usuario"
+        description={
+          pendingDelete && (
+            <>
+              ¿Eliminar definitivamente a{' '}
+              <strong style={{ color: NAVY }}>{pendingDelete.name}</strong> (
+              {pendingDelete.email})? Esta acción no se puede deshacer.
+            </>
+          )
+        }
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
+        loading={busyId === pendingDelete?.id}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   )
 }

@@ -10,11 +10,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
- * Sends transactional email (currently the welcome message with a temporary password).
+ * Sends transactional email (welcome message and credential-reset notices, each
+ * carrying a temporary password).
  *
  * Sends are {@link Async} and never throw: a failed delivery is logged but never rolls
- * back the surrounding user-creation transaction, so an SMTP outage cannot block the
- * admin from importing a roster. Toggle off with {@code app.mail.enabled=false}.
+ * back the surrounding transaction, so an SMTP outage cannot block the admin from
+ * importing a roster or resetting credentials. Toggle off with {@code app.mail.enabled=false}.
  */
 @Service
 public class EmailService {
@@ -36,10 +37,31 @@ public class EmailService {
         this.frontendUrl = frontendUrl;
     }
 
+    /** New account: greet the user and hand them their first temporary password. */
     @Async
     public void sendWelcomeEmail(String toEmail, String name, String temporaryPassword) {
+        send(toEmail, name, temporaryPassword,
+                "welcome",
+                "Bienvenido a ESCOMVoting",
+                "Se ha creado una cuenta para ti en la plataforma de votación electrónica "
+                        + "de ESCOM. Usa las siguientes credenciales para iniciar sesión:");
+    }
+
+    /** Credentials rotated by an admin: the previous password is now invalid. */
+    @Async
+    public void sendCredentialsResetEmail(String toEmail, String name, String temporaryPassword) {
+        send(toEmail, name, temporaryPassword,
+                "credentials-reset",
+                "Tus credenciales de acceso — ESCOMVoting",
+                "Un administrador restableció tus credenciales de acceso. "
+                        + "Tu contraseña anterior ya <strong>no es válida</strong>. "
+                        + "Usa la siguiente contraseña temporal para iniciar sesión:");
+    }
+
+    private void send(String toEmail, String name, String temporaryPassword,
+                      String kind, String subject, String intro) {
         if (!enabled) {
-            log.info("Mail disabled (app.mail.enabled=false) — skipping welcome email to {}", toEmail);
+            log.info("Mail disabled (app.mail.enabled=false) — skipping {} email to {}", kind, toEmail);
             return;
         }
         try {
@@ -47,16 +69,16 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
             helper.setFrom(from);
             helper.setTo(toEmail);
-            helper.setSubject("Bienvenido a ESCOMVoting");
-            helper.setText(buildHtmlBody(name, toEmail, temporaryPassword), true);
+            helper.setSubject(subject);
+            helper.setText(buildHtmlBody(name, toEmail, temporaryPassword, intro), true);
             mailSender.send(message);
-            log.info("Welcome email sent to {}", toEmail);
+            log.info("{} email sent to {}", kind, toEmail);
         } catch (Exception e) {
-            log.warn("Failed to send welcome email to {}: {}", toEmail, e.getMessage());
+            log.warn("Failed to send {} email to {}: {}", kind, toEmail, e.getMessage());
         }
     }
 
-    private String buildHtmlBody(String name, String email, String temporaryPassword) {
+    private String buildHtmlBody(String name, String email, String temporaryPassword, String intro) {
         String safeName = escape(name);
         return """
             <div style="font-family:Segoe UI,Arial,sans-serif;background:#f4f8fb;padding:32px">
@@ -67,8 +89,7 @@ public class EmailService {
                 <div style="padding:32px">
                   <p style="color:#0b1f3a;font-size:15px;margin:0 0 16px">Hola <strong>%s</strong>,</p>
                   <p style="color:#33475b;font-size:14px;line-height:1.6;margin:0 0 20px">
-                    Se ha creado una cuenta para ti en la plataforma de votación electrónica
-                    de ESCOM. Usa las siguientes credenciales para iniciar sesión:
+                    %s
                   </p>
                   <div style="background:#eef6fd;border:1px solid #d6ecf7;border-radius:12px;padding:16px 20px;margin:0 0 20px">
                     <p style="margin:0 0 8px;color:#33475b;font-size:13px">Correo: <strong style="color:#0b1f3a">%s</strong></p>
@@ -91,7 +112,7 @@ public class EmailService {
                 </div>
               </div>
             </div>
-            """.formatted(safeName, escape(email), escape(temporaryPassword), frontendUrl);
+            """.formatted(safeName, intro, escape(email), escape(temporaryPassword), frontendUrl);
     }
 
     private static String escape(String s) {

@@ -78,7 +78,7 @@ public class UserImportService {
                 user.setInstitutionalId(institutionalId);
                 user.setEmail(email);
                 user.setName(name);
-                user.setRole(UserRole.valueOf(role));
+                user.setRole(UserRole.fromString(role));
                 user.setPasswordHash(passwordEncoder.encode(plainPassword));
                 user.setAdmin(isAdmin);
                 pending.add(new PendingUser(user, plainPassword));
