@@ -45,7 +45,6 @@ const GREEN_SOFT   = 'rgba(22,163,74,0.10)'
 const RED          = '#dc2626'
 const RED_SOFT     = 'rgba(220,38,38,0.08)'
 const YELLOW       = '#d97706'
-const YELLOW_SOFT  = 'rgba(217,119,6,0.10)'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 

@@ -2,7 +2,6 @@ import { useState, useEffect, type FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle2, AlertCircle, ArrowRight, User } from 'lucide-react'
 import { userService } from '../../../services/user.service'
-import { useAuth } from '../../../contexts/AuthContext'
 import { NAVY, BLUE, CYAN, WHITE, BODY, MUTE, HAIRLINE_CYAN } from '../theme'
 
 const inputCls = 'w-full px-4 py-2.5 text-sm rounded-lg outline-none transition-all'
@@ -54,7 +53,6 @@ function SectionCard({ title, subtitle, children }: { title: string; subtitle?: 
 }
 
 export function ProfilePage() {
-  const { session, updateSessionName } = useAuth()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)

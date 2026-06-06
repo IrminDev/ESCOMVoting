@@ -81,7 +81,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   )
 }
 
-function StepRow({ step, index }: { step: ProcessStep; index: number }) {
+function StepRow({ step }: { step: ProcessStep }) {
   const StepIcon = step.icon
   const isDone    = step.status === 'done'
   const isRunning = step.status === 'running'
@@ -596,7 +596,7 @@ export function ElectionDetailPage() {
             </div>
             <div className="space-y-4">
               {steps.map((step, i) => (
-                <StepRow key={i} step={step} index={i} />
+                <StepRow key={i} step={step} />
               ))}
             </div>
           </motion.div>
@@ -671,7 +671,7 @@ export function ElectionDetailPage() {
               <Eyebrow>Proceso interrumpido</Eyebrow>
               <div className="space-y-4">
                 {steps.map((step, i) => (
-                  <StepRow key={i} step={step} index={i} />
+                  <StepRow key={i} step={step} />
                 ))}
               </div>
             </div>

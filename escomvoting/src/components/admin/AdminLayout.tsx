@@ -21,7 +21,6 @@ const NAVY = '#050C9C'
 const CYAN = '#3ABEF9'
 const ICE = '#A7E6FF'
 const WHITE = '#ffffff'
-const MUTE = '#6b7a99'
 const HAIRLINE_CYAN = 'rgba(58,190,249,0.27)'
 const HAIRLINE_ICE = 'rgba(167,230,255,0.27)'
 const SIDEBAR_GRADIENT =

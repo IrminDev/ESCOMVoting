@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import {
   Vote,
   Calendar,
-  ChevronRight,
   Clock,
   Lock,
   BarChart2,
@@ -24,7 +23,6 @@ import type { PageResponse } from '../../model/response/PageResponse'
 const NAVY         = '#050C9C'
 const BLUE         = '#3572EF'
 const CYAN         = '#3ABEF9'
-const ICE          = '#A7E6FF'
 const WHITE        = '#ffffff'
 const BODY         = '#3a4a6b'
 const MUTE         = '#6b7a99'

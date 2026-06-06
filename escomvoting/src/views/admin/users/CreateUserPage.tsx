@@ -6,7 +6,6 @@ import { userService } from '../../../services/user.service'
 import {
   NAVY,
   BLUE,
-  CYAN,
   WHITE,
   BODY,
   MUTE,
