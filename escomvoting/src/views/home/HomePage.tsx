@@ -196,7 +196,7 @@ function Hero() {
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </Link>
           <Link
-            to="/elections/public"
+            to="/past-elections"
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-medium transition-all backdrop-blur-md"
             style={{
               background: 'rgba(255,255,255,0.08)',
@@ -443,7 +443,7 @@ function ClosedElections() {
             </h2>
           </div>
           <Link
-            to="/elections/public"
+            to="/past-elections"
             className="inline-flex items-center gap-1.5 font-medium text-sm hover:gap-2.5 transition-all"
             style={{ color: PALETTE.blue }}
           >
@@ -579,7 +579,7 @@ function FinalCta() {
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
-              to="/elections/public"
+              to="/past-elections"
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-medium backdrop-blur-md"
               style={{ background: 'rgba(255,255,255,0.12)', color: '#ffffff', border: `1px solid ${PALETTE.ice}55` }}
             >
