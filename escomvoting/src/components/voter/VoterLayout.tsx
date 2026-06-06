@@ -1,7 +1,6 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { ShieldCheck, Sun, Moon, LogOut, Vote, LayoutDashboard } from 'lucide-react'
+import { ShieldCheck, LogOut, Vote, LayoutDashboard } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTheme } from '../../contexts/ThemeContext'
 
 // ── Design tokens (DESIGN.md v2.0 oceanic) ────────────────────────────────
 
@@ -23,7 +22,6 @@ const ROLE_LABEL: Record<string, string> = {
 
 export function VoterLayout() {
   const { session, isAdmin, logout } = useAuth()
-  const { isDark, toggle } = useTheme()
   const navigate = useNavigate()
 
   function handleLogout() {
@@ -147,26 +145,6 @@ export function VoterLayout() {
               </p>
             </div>
           </Link>
-
-          {/* Theme toggle */}
-          <button
-            onClick={toggle}
-            aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150"
-            style={{ color: MUTE, background: 'transparent', border: 'none', cursor: 'pointer' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = ICE_SOFT
-              e.currentTarget.style.color      = NAVY
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent'
-              e.currentTarget.style.color      = MUTE
-            }}
-          >
-            {isDark
-              ? <Sun  size={14} strokeWidth={2} />
-              : <Moon size={14} strokeWidth={2} />}
-          </button>
 
           {/* Logout */}
           <button

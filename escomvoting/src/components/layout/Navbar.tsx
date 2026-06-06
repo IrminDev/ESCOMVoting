@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Shield, Sun, Moon, Menu, X, ArrowRight, LayoutDashboard } from 'lucide-react'
-import { useTheme } from '../../contexts/ThemeContext'
+import { Shield, Menu, X, ArrowRight, LayoutDashboard } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { cn } from '../../lib/utils'
 
@@ -23,7 +22,6 @@ const navRouteLinks = [
 ]
 
 export function Navbar() {
-  const { isDark, toggle } = useTheme()
   const { isAuthenticated, isAdmin } = useAuth()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -117,29 +115,6 @@ export function Navbar() {
 
         {/* Right actions */}
         <div className="flex items-center gap-2">
-          {/* Theme toggle */}
-          <button
-            onClick={toggle}
-            aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-            className="p-2 rounded-md transition-colors duration-150"
-            style={{
-              color: MUTE,
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-            onMouseEnter={(e) => {
-              ;(e.currentTarget as HTMLButtonElement).style.color = NAVY
-              ;(e.currentTarget as HTMLButtonElement).style.background = 'rgba(58,190,249,0.10)'
-            }}
-            onMouseLeave={(e) => {
-              ;(e.currentTarget as HTMLButtonElement).style.color = MUTE
-              ;(e.currentTarget as HTMLButtonElement).style.background = 'transparent'
-            }}
-          >
-            {isDark ? <Sun size={16} strokeWidth={2} /> : <Moon size={16} strokeWidth={2} />}
-          </button>
-
           {/* CTA — desktop only */}
           {isAuthenticated ? (
             <Link
