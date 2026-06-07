@@ -40,10 +40,11 @@ function PublicLayout() {
 
 // ── Route guards ───────────────────────────────────────────────────────────
 
-function RequireAuth({ role, children }: { role?: string; children: ReactNode }) {
-  const { isAuthenticated, session } = useAuth()
+function RequireAuth({ role, requireAdmin, children }: { role?: string; requireAdmin?: boolean; children: ReactNode }) {
+  const { isAuthenticated, isAdmin, session } = useAuth()
   if (!isAuthenticated) return <Navigate to="/login" replace />
-  if (role && session?.role !== role) return <Navigate to="/" replace />
+  if (role && session?.role !== role) return <Navigate to="/elections" replace />
+  if (requireAdmin && !isAdmin) return <Navigate to="/elections" replace />
   return <>{children}</>
 }
 
@@ -97,7 +98,7 @@ export function AppRouter() {
         <Route
           path="/admin"
           element={
-            <RequireAuth role="PAAE">
+            <RequireAuth requireAdmin>
               <AdminLayout />
             </RequireAuth>
           }
