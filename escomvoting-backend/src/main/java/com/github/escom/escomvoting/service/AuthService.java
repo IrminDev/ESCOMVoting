@@ -42,7 +42,7 @@ public class AuthService {
         }
 
         String token = buildToken(user);
-        return new LoginResponse(token, user.getRole().name(), user.getName());
+        return new LoginResponse(token, user.getRole().name(), user.getName(), user.isAdmin());
     }
 
     private String buildToken(User user) {

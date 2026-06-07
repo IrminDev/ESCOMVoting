@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     const res = await authService.login({ email, password })
-    const sess: Session = { token: res.token, role: res.role, name: res.name }
+    const sess: Session = { token: res.token, role: res.role, name: res.name, isAdmin: res.isAdmin }
     saveSession(sess)
     setSession(sess)
   }, [])
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       session,
       isAuthenticated: session !== null,
-      isAdmin: session?.role === 'PAAE',
+      isAdmin: session?.isAdmin === true,
       login,
       logout,
       updateSessionName,
