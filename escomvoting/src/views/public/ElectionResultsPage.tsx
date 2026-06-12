@@ -173,6 +173,7 @@ export function ElectionResultsPage() {
   const isTied            = winners.length > 1
 
   return (
+    <div style={{ background: '#f8f8f8', minHeight: '100%' }}>
     <div
       style={{ maxWidth: '880px', margin: '0 auto', padding: '2.5rem 1rem' }}
       className="space-y-8"
@@ -483,6 +484,7 @@ export function ElectionResultsPage() {
           </div>
         ) : null}
       </motion.section>
+    </div>
     </div>
   )
 }
