@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -134,13 +134,19 @@ export function AdminLayout() {
         className="relative flex items-center gap-2 px-5 h-16 shrink-0"
         style={{ borderBottom: `1px solid ${HAIRLINE_ICE}` }}
       >
-        <Shield size={20} style={{ color: ICE }} strokeWidth={2} />
-        <span
-          className="text-sm font-semibold tracking-tight"
-          style={{ color: WHITE }}
+        <Link
+          to="/"
+          className="flex items-center gap-2"
+          style={{ textDecoration: 'none' }}
         >
-          ESCOMVoting
-        </span>
+          <Shield size={20} style={{ color: ICE }} strokeWidth={2} />
+          <span
+            className="text-sm font-semibold tracking-tight"
+            style={{ color: WHITE }}
+          >
+            ESCOMVoting
+          </span>
+        </Link>
         <span
           className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full"
           style={{
@@ -321,13 +327,19 @@ export function AdminLayout() {
           >
             {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
           </button>
-          <Shield size={18} style={{ color: NAVY }} />
-          <span
-            className="text-sm font-semibold tracking-tight"
-            style={{ color: NAVY }}
+          <Link
+            to="/"
+            className="flex items-center gap-2"
+            style={{ textDecoration: 'none' }}
           >
-            ESCOMVoting
-          </span>
+            <Shield size={18} style={{ color: NAVY }} />
+            <span
+              className="text-sm font-semibold tracking-tight"
+              style={{ color: NAVY }}
+            >
+              ESCOMVoting
+            </span>
+          </Link>
           <span
             className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full"
             style={{

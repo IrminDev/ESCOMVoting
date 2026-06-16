@@ -276,6 +276,38 @@ export function ElectionsListPage() {
         </p>
       </motion.div>
 
+      {/* Historial de resultados */}
+      <Link
+        to="/past-elections"
+        className="group flex items-center justify-between gap-4 rounded-2xl px-6 py-4 transition-all duration-150"
+        style={{ background: WHITE, border: `1px solid ${HAIRLINE}`, textDecoration: 'none' }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = ICE_SOFT }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = WHITE }}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: BLUE_SOFT }}
+          >
+            <BarChart2 size={18} strokeWidth={2} style={{ color: BLUE }} />
+          </div>
+          <div>
+            <p className="text-sm font-semibold" style={{ color: NAVY }}>
+              Historial de resultados
+            </p>
+            <p className="text-xs" style={{ color: MUTE }}>
+              Consulta los resultados de elecciones pasadas
+            </p>
+          </div>
+        </div>
+        <ArrowUpRight
+          size={16}
+          strokeWidth={2}
+          style={{ color: BLUE }}
+          className="transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </Link>
+
       {/* Error */}
       {error && (
         <div

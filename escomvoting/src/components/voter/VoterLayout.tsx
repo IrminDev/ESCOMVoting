@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { ShieldCheck, LogOut, Vote, LayoutDashboard } from 'lucide-react'
+import { ShieldCheck, LogOut, Vote, LayoutDashboard, BarChart2 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 
 // ── Design tokens (DESIGN.md v2.0 oceanic) ────────────────────────────────
@@ -41,7 +41,7 @@ export function VoterLayout() {
       >
         {/* Logo */}
         <Link
-          to="/elections"
+          to="/"
           className="flex items-center gap-2 shrink-0 group"
           style={{ textDecoration: 'none' }}
         >
@@ -94,6 +94,40 @@ export function VoterLayout() {
           >
             <Vote size={13} strokeWidth={2} />
             Elecciones
+          </NavLink>
+
+          <NavLink
+            to="/past-elections"
+            style={({ isActive }) => ({
+              display:        'inline-flex',
+              alignItems:     'center',
+              gap:            '6px',
+              fontSize:       '0.8125rem',
+              fontWeight:     500,
+              padding:        '5px 10px',
+              borderRadius:   '9999px',
+              textDecoration: 'none',
+              transition:     'all 0.15s',
+              background:     isActive ? CYAN_SOFT : 'transparent',
+              color:          isActive ? NAVY      : MUTE,
+            })}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget
+              if (!el.getAttribute('aria-current')) {
+                el.style.background = ICE_SOFT
+                el.style.color      = NAVY
+              }
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget
+              if (!el.getAttribute('aria-current')) {
+                el.style.background = 'transparent'
+                el.style.color      = MUTE
+              }
+            }}
+          >
+            <BarChart2 size={13} strokeWidth={2} />
+            Historial
           </NavLink>
 
           {isAdmin && (

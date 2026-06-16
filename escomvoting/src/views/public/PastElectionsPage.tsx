@@ -193,6 +193,7 @@ export function PastElectionsPage() {
   }, [page])
 
   return (
+    <div style={{ background: '#f8f8f8', minHeight: '100%' }}>
     <div
       style={{ maxWidth: '720px', margin: '0 auto', padding: '2.5rem 1rem' }}
       className="space-y-8"
@@ -258,6 +259,7 @@ export function PastElectionsPage() {
           </p>
         </div>
       )}
+    </div>
     </div>
   )
 }

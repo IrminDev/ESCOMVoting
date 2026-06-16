@@ -12,11 +12,6 @@ const BODY = '#3a4a6b'
 const MUTE = '#6b7a99'
 const WHITE = '#ffffff'
 
-const navLinks = [
-  { label: 'Características', href: '#features' },
-  { label: 'Protocolo', href: '#protocol' },
-]
-
 const navRouteLinks = [
   { label: 'Historial', to: '/past-elections' },
 ]
@@ -75,24 +70,6 @@ export function Navbar() {
 
         {/* Center nav links — desktop only */}
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={cn(
-                'text-sm font-medium px-3 py-1.5 rounded-md transition-colors duration-150',
-              )}
-              style={{ color: MUTE, textDecoration: 'none' }}
-              onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.color = NAVY
-              }}
-              onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.color = MUTE
-              }}
-            >
-              {link.label}
-            </a>
-          ))}
           {navRouteLinks.map((link) => (
             <Link
               key={link.label}
@@ -205,17 +182,6 @@ export function Navbar() {
               padding: '12px 24px 20px',
             }}
           >
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="block text-sm font-medium py-2.5 px-2"
-                style={{ color: BODY, textDecoration: 'none' }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
             {navRouteLinks.map((link) => (
               <Link
                 key={link.label}

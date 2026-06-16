@@ -5,12 +5,6 @@ const MUTE = '#6b7a99'
 const HAIRLINE_CYAN = 'rgba(58,190,249,0.27)'
 const WHITE = '#ffffff'
 
-const footerLinks = [
-  { label: 'Inicio', href: '/' },
-  { label: 'Protocolo', href: '#protocol' },
-  { label: 'Acceder', href: '#access' },
-]
-
 export function Footer() {
   return (
     <footer
@@ -36,26 +30,6 @@ export function Footer() {
             </p>
           </div>
         </div>
-
-        {/* Links */}
-        <nav className="flex items-center gap-5">
-          {footerLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-xs font-medium transition-colors duration-150"
-              style={{ color: MUTE, textDecoration: 'none' }}
-              onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.color = NAVY
-              }}
-              onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.color = MUTE
-              }}
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
 
         {/* Copyright */}
         <p
